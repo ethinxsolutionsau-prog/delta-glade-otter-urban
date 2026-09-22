@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Fathom",
+      "hasCanvas": false,
+      "bodyTextLen": 90,
+      "bodyTextHash": "2a61c15fef163bef70796f1c056409c5d8c6c33993b47f621e44b6986db85e4a",
+      "bodyTextPrefix": "Fathom CASES No saved cases yet. Run an investigation to start a",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Fathom",
+      "hasCanvas": false,
+      "bodyTextLen": 16,
+      "bodyTextHash": "96b4713f3486d1518a0ae1e7c9abf82d8534f227668b1559190768dabea62b02",
+      "bodyTextPrefix": "Restoring cases…",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
