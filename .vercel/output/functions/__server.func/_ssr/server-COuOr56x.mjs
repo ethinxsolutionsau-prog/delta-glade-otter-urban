@@ -1,5 +1,5 @@
 import { n as TSS_SERVER_FUNCTION, t as createServerFn } from "./ssr.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/server-DJH9lQCa.js
+//#region node_modules/.nitro/vite/services/ssr/assets/server-COuOr56x.js
 var createServerRpc = (serverFnMeta, splitImportFn) => {
 	const url = "/_serverFn/" + serverFnMeta.id;
 	return Object.assign(splitImportFn, {
@@ -20,7 +20,7 @@ var reconUsername_createServerFn_handler = createServerRpc({
 	filename: "src/lib/osint/server.ts"
 }, (opts) => reconUsername.__executeServer(opts));
 var reconUsername = createServerFn({ method: "POST" }).validator((d) => ({ username: str(d.username, 64) })).handler(reconUsername_createServerFn_handler, async ({ data }) => {
-	const { collectUsername } = await import("./collectors.server-DHvXt1gW.mjs");
+	const { collectUsername } = await import("./collectors.server-DkprSwY5.mjs");
 	return collectUsername(data.username);
 });
 var reconGithub_createServerFn_handler = createServerRpc({
@@ -29,7 +29,7 @@ var reconGithub_createServerFn_handler = createServerRpc({
 	filename: "src/lib/osint/server.ts"
 }, (opts) => reconGithub.__executeServer(opts));
 var reconGithub = createServerFn({ method: "POST" }).validator((d) => ({ username: str(d.username, 64) })).handler(reconGithub_createServerFn_handler, async ({ data }) => {
-	const { collectGithub } = await import("./collectors.server-DHvXt1gW.mjs");
+	const { collectGithub } = await import("./collectors.server-DkprSwY5.mjs");
 	return collectGithub(data.username);
 });
 var reconEmail_createServerFn_handler = createServerRpc({
@@ -38,7 +38,7 @@ var reconEmail_createServerFn_handler = createServerRpc({
 	filename: "src/lib/osint/server.ts"
 }, (opts) => reconEmail.__executeServer(opts));
 var reconEmail = createServerFn({ method: "POST" }).validator((d) => ({ email: str(d.email, 254).toLowerCase() })).handler(reconEmail_createServerFn_handler, async ({ data }) => {
-	const { collectEmail } = await import("./collectors.server-DHvXt1gW.mjs");
+	const { collectEmail } = await import("./collectors.server-DkprSwY5.mjs");
 	return collectEmail(data.email);
 });
 var reconDomain_createServerFn_handler = createServerRpc({
@@ -47,7 +47,7 @@ var reconDomain_createServerFn_handler = createServerRpc({
 	filename: "src/lib/osint/server.ts"
 }, (opts) => reconDomain.__executeServer(opts));
 var reconDomain = createServerFn({ method: "POST" }).validator((d) => ({ domain: str(d.domain, 253).toLowerCase() })).handler(reconDomain_createServerFn_handler, async ({ data }) => {
-	const { collectDomain } = await import("./collectors.server-DHvXt1gW.mjs");
+	const { collectDomain } = await import("./collectors.server-DkprSwY5.mjs");
 	return collectDomain(data.domain);
 });
 var reconIp_createServerFn_handler = createServerRpc({
@@ -56,7 +56,7 @@ var reconIp_createServerFn_handler = createServerRpc({
 	filename: "src/lib/osint/server.ts"
 }, (opts) => reconIp.__executeServer(opts));
 var reconIp = createServerFn({ method: "POST" }).validator((d) => ({ ip: str(d.ip, 64) })).handler(reconIp_createServerFn_handler, async ({ data }) => {
-	const { collectIp } = await import("./collectors.server-DHvXt1gW.mjs");
+	const { collectIp } = await import("./collectors.server-DkprSwY5.mjs");
 	return collectIp(data.ip);
 });
 var reconUrl_createServerFn_handler = createServerRpc({
@@ -65,8 +65,43 @@ var reconUrl_createServerFn_handler = createServerRpc({
 	filename: "src/lib/osint/server.ts"
 }, (opts) => reconUrl.__executeServer(opts));
 var reconUrl = createServerFn({ method: "POST" }).validator((d) => ({ url: str(d.url, 2048) })).handler(reconUrl_createServerFn_handler, async ({ data }) => {
-	const { collectUrl } = await import("./collectors.server-DHvXt1gW.mjs");
+	const { collectUrl } = await import("./collectors.server-DkprSwY5.mjs");
 	return collectUrl(data.url);
+});
+var reconPhone_createServerFn_handler = createServerRpc({
+	id: "4ad3655e047f1cbd9ebae198a5a08ae3db8e2fdf7730badcf97fdac01dcbd22c",
+	name: "reconPhone",
+	filename: "src/lib/osint/server.ts"
+}, (opts) => reconPhone.__executeServer(opts));
+var reconPhone = createServerFn({ method: "POST" }).validator((d) => ({ phone: str(d.phone, 32) })).handler(reconPhone_createServerFn_handler, async ({ data }) => {
+	const { collectPhone } = await import("./collectors.server-DkprSwY5.mjs");
+	return collectPhone(data.phone);
+});
+var reconHash_createServerFn_handler = createServerRpc({
+	id: "1ca4320098cc64c9934ca7068483826153503970b4eddf60a8ded1da3722a974",
+	name: "reconHash",
+	filename: "src/lib/osint/server.ts"
+}, (opts) => reconHash.__executeServer(opts));
+var reconHash = createServerFn({ method: "POST" }).validator((d) => ({
+	hash: str(d.hash, 128).toLowerCase(),
+	algo: str(d.algo, 16)
+})).handler(reconHash_createServerFn_handler, async ({ data }) => {
+	const { collectHash } = await import("./collectors.server-DkprSwY5.mjs");
+	const algo = data.algo;
+	return collectHash(data.hash, algo);
+});
+var reconWallet_createServerFn_handler = createServerRpc({
+	id: "2b14b4f8a8a1bce53f750cd24ab4c6077558acdfad4daac8e53c3c9c9d5ec5df",
+	name: "reconWallet",
+	filename: "src/lib/osint/server.ts"
+}, (opts) => reconWallet.__executeServer(opts));
+var reconWallet = createServerFn({ method: "POST" }).validator((d) => ({
+	address: str(d.address, 128),
+	chain: str(d.chain, 16)
+})).handler(reconWallet_createServerFn_handler, async ({ data }) => {
+	const { collectWallet } = await import("./collectors.server-DkprSwY5.mjs");
+	const chain = data.chain === "bitcoin" || data.chain === "ethereum" ? data.chain : "unknown";
+	return collectWallet(data.address, chain);
 });
 var generateBrief_createServerFn_handler = createServerRpc({
 	id: "dc8ca333f29ea1e2ae48f9d52626e41eb77b5d246eb8f68fd7602016fac65e95",
@@ -116,4 +151,4 @@ var generateBrief = createServerFn({ method: "POST" }).validator((d) => ({
 	};
 });
 //#endregion
-export { generateBrief_createServerFn_handler, reconDomain_createServerFn_handler, reconEmail_createServerFn_handler, reconGithub_createServerFn_handler, reconIp_createServerFn_handler, reconUrl_createServerFn_handler, reconUsername_createServerFn_handler };
+export { generateBrief_createServerFn_handler, reconDomain_createServerFn_handler, reconEmail_createServerFn_handler, reconGithub_createServerFn_handler, reconHash_createServerFn_handler, reconIp_createServerFn_handler, reconPhone_createServerFn_handler, reconUrl_createServerFn_handler, reconUsername_createServerFn_handler, reconWallet_createServerFn_handler };

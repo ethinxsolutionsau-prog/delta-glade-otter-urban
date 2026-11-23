@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Fathom",
+      "hasCanvas": false,
+      "bodyTextLen": 1641,
+      "bodyTextHash": "95165048e744f8cd686b9aaef1e25287145132c2eb532d4bef7182db406ebcb5",
+      "bodyTextPrefix": "Fathom CASES No saved cases yet. Run an investigation to start a",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Fathom",
+      "hasCanvas": false,
+      "bodyTextLen": 1567,
+      "bodyTextHash": "0c7fff647f05548ec5e9df500d3a570edc44aca9e0c8d8fc80856ef98d019d19",
+      "bodyTextPrefix": "Fathom Public-source intelligence desk. Classify an identifier, ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}

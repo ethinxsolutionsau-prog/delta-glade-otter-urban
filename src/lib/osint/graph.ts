@@ -115,8 +115,12 @@ export function buildGraph(record: CaseRecord): GraphModel {
   const phone = record.modules.phone?.data;
   if (phone?.e164) {
     add({ id: `ph:${phone.e164}`, label: phone.international ?? phone.e164, kind: "identity" }, "target", "phone");
-    if (phone.country) {
-      add({ id: `place:${phone.country}`, label: phone.country, kind: "place" }, `ph:${phone.e164}`, "country");
+    if (phone.carrier) {
+      add({ id: `car:${phone.carrier}`, label: phone.carrier, kind: "infra" }, `ph:${phone.e164}`, "carrier");
+    }
+    const place = [phone.city, phone.region, phone.countryName || phone.country].filter(Boolean).join(", ");
+    if (place) {
+      add({ id: `place:${place}`, label: place, kind: "place" }, `ph:${phone.e164}`, "geo");
     }
   }
 

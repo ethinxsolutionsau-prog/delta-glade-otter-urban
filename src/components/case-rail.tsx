@@ -1,9 +1,11 @@
 import { formatDistanceToNow } from "date-fns";
-import { Plus, Trash2 } from "lucide-react";
+import { Download, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCaseStore } from "@/lib/cases/store";
 import { typeLabel } from "@/lib/osint/classify";
+import { exportAllCases } from "@/lib/osint/report";
 import { cn } from "@/lib/utils";
 
 export function CaseRail() {
@@ -17,9 +19,24 @@ export function CaseRail() {
     <div className="flex h-full flex-col">
       <div className="mb-3 flex items-center justify-between">
         <p className="text-xs font-medium uppercase tracking-[0.16em] text-subtle">Cases</p>
-        <Button variant="ghost" size="icon-sm" onClick={openNew} aria-label="New investigation">
-          <Plus className="size-4" />
-        </Button>
+        <div className="flex items-center">
+          {cases.length > 0 ? (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Export all cases"
+              onClick={() => {
+                exportAllCases(cases);
+                toast.success("All cases downloaded");
+              }}
+            >
+              <Download className="size-4" />
+            </Button>
+          ) : null}
+          <Button variant="ghost" size="icon-sm" onClick={openNew} aria-label="New investigation">
+            <Plus className="size-4" />
+          </Button>
+        </div>
       </div>
       <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto scrollbar-thin">
         {cases.length === 0 ? (
@@ -37,7 +54,7 @@ export function CaseRail() {
             >
               <button
                 type="button"
-                className="min-w-0 flex-1 text-left"
+                className="min-h-11 min-w-0 flex-1 text-left"
                 onClick={() => setActive(c.id)}
               >
                 <p className="truncate font-mono text-sm text-fg">{c.query}</p>

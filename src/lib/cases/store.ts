@@ -65,10 +65,8 @@ export const useCaseStore = create<CaseStore>()(
     }),
     {
       name: "fathom-cases",
+      skipHydration: true,
       partialize: (s) => ({ cases: s.cases, activeId: s.activeId }),
-      onRehydrateStorage: () => () => {
-        useCaseStore.getState().setHasHydrated(true);
-      },
     },
   ),
 );

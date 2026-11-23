@@ -1,280 +1,11 @@
-import { i as __toESM, t as __commonJSMin } from "../../_runtime.mjs";
-import { n as require_react, t as useComposedRefs } from "./react-compose-refs+[...].mjs";
-import { n as require_jsx_runtime, t as createContextScope } from "../radix-ui__react-context+react.mjs";
+import { i as __toESM } from "../../_runtime.mjs";
+import { l as require_react_dom, u as require_react } from "../@floating-ui/react-dom+[...].mjs";
+import { a as createContextScope, o as useComposedRefs, r as createSlot, s as require_jsx_runtime } from "./react-collection+[...].mjs";
 import { t as composeEventHandlers } from "../radix-ui__primitive.mjs";
 import { __assign, __rest, __spreadArray } from "tslib";
-//#region node_modules/react-dom/cjs/react-dom.production.js
-/**
-* @license React
-* react-dom.production.js
-*
-* Copyright (c) Meta Platforms, Inc. and affiliates.
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
-var require_react_dom_production = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var React = require_react();
-	function formatProdErrorMessage(code) {
-		var url = "https://react.dev/errors/" + code;
-		if (1 < arguments.length) {
-			url += "?args[]=" + encodeURIComponent(arguments[1]);
-			for (var i = 2; i < arguments.length; i++) url += "&args[]=" + encodeURIComponent(arguments[i]);
-		}
-		return "Minified React error #" + code + "; visit " + url + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
-	}
-	function noop() {}
-	var Internals = {
-		d: {
-			f: noop,
-			r: function() {
-				throw Error(formatProdErrorMessage(522));
-			},
-			D: noop,
-			C: noop,
-			L: noop,
-			m: noop,
-			X: noop,
-			S: noop,
-			M: noop
-		},
-		p: 0,
-		findDOMNode: null
-	};
-	var REACT_PORTAL_TYPE = Symbol.for("react.portal");
-	function createPortal$1(children, containerInfo, implementation) {
-		var key = 3 < arguments.length && void 0 !== arguments[3] ? arguments[3] : null;
-		return {
-			$$typeof: REACT_PORTAL_TYPE,
-			key: null == key ? null : "" + key,
-			children,
-			containerInfo,
-			implementation
-		};
-	}
-	var ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
-	function getCrossOriginStringAs(as, input) {
-		if ("font" === as) return "";
-		if ("string" === typeof input) return "use-credentials" === input ? input : "";
-	}
-	exports.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = Internals;
-	exports.createPortal = function(children, container) {
-		var key = 2 < arguments.length && void 0 !== arguments[2] ? arguments[2] : null;
-		if (!container || 1 !== container.nodeType && 9 !== container.nodeType && 11 !== container.nodeType) throw Error(formatProdErrorMessage(299));
-		return createPortal$1(children, container, null, key);
-	};
-	exports.flushSync = function(fn) {
-		var previousTransition = ReactSharedInternals.T, previousUpdatePriority = Internals.p;
-		try {
-			if (ReactSharedInternals.T = null, Internals.p = 2, fn) return fn();
-		} finally {
-			ReactSharedInternals.T = previousTransition, Internals.p = previousUpdatePriority, Internals.d.f();
-		}
-	};
-	exports.preconnect = function(href, options) {
-		"string" === typeof href && (options ? (options = options.crossOrigin, options = "string" === typeof options ? "use-credentials" === options ? options : "" : void 0) : options = null, Internals.d.C(href, options));
-	};
-	exports.prefetchDNS = function(href) {
-		"string" === typeof href && Internals.d.D(href);
-	};
-	exports.preinit = function(href, options) {
-		if ("string" === typeof href && options && "string" === typeof options.as) {
-			var as = options.as, crossOrigin = getCrossOriginStringAs(as, options.crossOrigin), integrity = "string" === typeof options.integrity ? options.integrity : void 0, fetchPriority = "string" === typeof options.fetchPriority ? options.fetchPriority : void 0;
-			"style" === as ? Internals.d.S(href, "string" === typeof options.precedence ? options.precedence : void 0, {
-				crossOrigin,
-				integrity,
-				fetchPriority
-			}) : "script" === as && Internals.d.X(href, {
-				crossOrigin,
-				integrity,
-				fetchPriority,
-				nonce: "string" === typeof options.nonce ? options.nonce : void 0
-			});
-		}
-	};
-	exports.preinitModule = function(href, options) {
-		if ("string" === typeof href) if ("object" === typeof options && null !== options) {
-			if (null == options.as || "script" === options.as) {
-				var crossOrigin = getCrossOriginStringAs(options.as, options.crossOrigin);
-				Internals.d.M(href, {
-					crossOrigin,
-					integrity: "string" === typeof options.integrity ? options.integrity : void 0,
-					nonce: "string" === typeof options.nonce ? options.nonce : void 0
-				});
-			}
-		} else options ?? Internals.d.M(href);
-	};
-	exports.preload = function(href, options) {
-		if ("string" === typeof href && "object" === typeof options && null !== options && "string" === typeof options.as) {
-			var as = options.as, crossOrigin = getCrossOriginStringAs(as, options.crossOrigin);
-			Internals.d.L(href, as, {
-				crossOrigin,
-				integrity: "string" === typeof options.integrity ? options.integrity : void 0,
-				nonce: "string" === typeof options.nonce ? options.nonce : void 0,
-				type: "string" === typeof options.type ? options.type : void 0,
-				fetchPriority: "string" === typeof options.fetchPriority ? options.fetchPriority : void 0,
-				referrerPolicy: "string" === typeof options.referrerPolicy ? options.referrerPolicy : void 0,
-				imageSrcSet: "string" === typeof options.imageSrcSet ? options.imageSrcSet : void 0,
-				imageSizes: "string" === typeof options.imageSizes ? options.imageSizes : void 0,
-				media: "string" === typeof options.media ? options.media : void 0
-			});
-		}
-	};
-	exports.preloadModule = function(href, options) {
-		if ("string" === typeof href) if (options) {
-			var crossOrigin = getCrossOriginStringAs(options.as, options.crossOrigin);
-			Internals.d.m(href, {
-				as: "string" === typeof options.as && "script" !== options.as ? options.as : void 0,
-				crossOrigin,
-				integrity: "string" === typeof options.integrity ? options.integrity : void 0
-			});
-		} else Internals.d.m(href);
-	};
-	exports.requestFormReset = function(form) {
-		Internals.d.r(form);
-	};
-	exports.unstable_batchedUpdates = function(fn, a) {
-		return fn(a);
-	};
-	exports.useFormState = function(action, initialState, permalink) {
-		return ReactSharedInternals.H.useFormState(action, initialState, permalink);
-	};
-	exports.useFormStatus = function() {
-		return ReactSharedInternals.H.useHostTransitionStatus();
-	};
-	exports.version = "19.2.8";
-}));
-//#endregion
-//#region node_modules/react-dom/index.js
-var require_react_dom = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function checkDCE() {
-		if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === "undefined" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== "function") return;
-		try {
-			__REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);
-		} catch (err) {
-			console.error(err);
-		}
-	}
-	checkDCE();
-	module.exports = require_react_dom_production();
-}));
-//#endregion
-//#region node_modules/@radix-ui/react-slot/dist/index.mjs
-var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
-var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
-var __defProp$11 = Object.defineProperty;
-var __name$11 = (target, value) => __defProp$11(target, "name", {
-	value,
-	configurable: true
-});
-// @__NO_SIDE_EFFECTS__
-function createSlot(ownerName) {
-	const Slot2 = import_react.forwardRef((props, forwardedRef) => {
-		let { children, ...slotProps } = props;
-		let slottableElement = null;
-		let hasSlottable = false;
-		const newChildren = [];
-		if (isLazyComponent(children) && typeof use === "function") children = use(children._payload);
-		import_react.Children.forEach(children, (maybeSlottable) => {
-			if (isSlottable(maybeSlottable)) {
-				hasSlottable = true;
-				const slottable = maybeSlottable;
-				let child = "child" in slottable.props ? slottable.props.child : slottable.props.children;
-				if (isLazyComponent(child) && typeof use === "function") child = use(child._payload);
-				slottableElement = getSlottableElementFromSlottable(slottable, child);
-				newChildren.push(slottableElement?.props?.children);
-			} else newChildren.push(maybeSlottable);
-		});
-		if (slottableElement) slottableElement = import_react.cloneElement(slottableElement, void 0, newChildren);
-		else if (!hasSlottable && import_react.Children.count(children) === 1 && import_react.isValidElement(children)) slottableElement = children;
-		const slottableElementRef = slottableElement ? getElementRef$1(slottableElement) : void 0;
-		const composedRef = useComposedRefs(forwardedRef, slottableElementRef);
-		if (!slottableElement) {
-			if (children || children === 0) throw new Error(hasSlottable ? createSlottableError(ownerName) : createSlotError(ownerName));
-			return children;
-		}
-		const mergedProps = mergeProps(slotProps, slottableElement.props ?? {});
-		if (slottableElement.type !== import_react.Fragment) mergedProps.ref = forwardedRef ? composedRef : slottableElementRef;
-		return import_react.cloneElement(slottableElement, mergedProps);
-	});
-	Slot2.displayName = `${ownerName}.Slot`;
-	return Slot2;
-}
-__name$11(createSlot, "createSlot");
-var Slot$1 = /* @__PURE__ */ createSlot("Slot");
-var SLOTTABLE_IDENTIFIER = Symbol.for("radix.slottable");
-// @__NO_SIDE_EFFECTS__
-function createSlottable(ownerName) {
-	const Slottable2 = /* @__PURE__ */ __name$11((props) => "child" in props ? props.children(props.child) : props.children, "Slottable");
-	Slottable2.displayName = `${ownerName}.Slottable`;
-	Slottable2.__radixId = SLOTTABLE_IDENTIFIER;
-	return Slottable2;
-}
-__name$11(createSlottable, "createSlottable");
-var getSlottableElementFromSlottable = /* @__PURE__ */ __name$11((slottable, child) => {
-	if ("child" in slottable.props) {
-		const child2 = slottable.props.child;
-		if (!import_react.isValidElement(child2)) return null;
-		return import_react.cloneElement(child2, void 0, slottable.props.children(child2.props.children));
-	}
-	return import_react.isValidElement(child) ? child : null;
-}, "getSlottableElementFromSlottable");
-function mergeProps(slotProps, childProps) {
-	const overrideProps = { ...childProps };
-	for (const propName in childProps) {
-		const slotPropValue = slotProps[propName];
-		const childPropValue = childProps[propName];
-		if (/^on[A-Z]/.test(propName)) {
-			if (slotPropValue && childPropValue) overrideProps[propName] = (...args) => {
-				const result = childPropValue(...args);
-				slotPropValue(...args);
-				return result;
-			};
-			else if (slotPropValue) overrideProps[propName] = slotPropValue;
-		} else if (propName === "style") overrideProps[propName] = {
-			...slotPropValue,
-			...childPropValue
-		};
-		else if (propName === "className") overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
-	}
-	return {
-		...slotProps,
-		...overrideProps
-	};
-}
-__name$11(mergeProps, "mergeProps");
-function getElementRef$1(element) {
-	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.ref;
-	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.props.ref;
-	return element.props.ref || element.ref;
-}
-__name$11(getElementRef$1, "getElementRef");
-function isSlottable(child) {
-	return import_react.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
-}
-__name$11(isSlottable, "isSlottable");
-var REACT_LAZY_TYPE = Symbol.for("react.lazy");
-function isLazyComponent(element) {
-	return element != null && typeof element === "object" && "$$typeof" in element && element.$$typeof === REACT_LAZY_TYPE && "_payload" in element && isPromiseLike(element._payload);
-}
-__name$11(isLazyComponent, "isLazyComponent");
-function isPromiseLike(value) {
-	return typeof value === "object" && value !== null && "then" in value;
-}
-__name$11(isPromiseLike, "isPromiseLike");
-var createSlotError = /* @__PURE__ */ __name$11((ownerName) => {
-	return `${ownerName} failed to slot onto its children. Expected a single React element child or \`Slottable\`.`;
-}, "createSlotError");
-var createSlottableError = /* @__PURE__ */ __name$11((ownerName) => {
-	return `${ownerName} failed to slot onto its \`Slottable\`. Expected \`Slottable\` to receive a single React element child.`;
-}, "createSlottableError");
-var use = import_react[" use ".trim().toString()];
-//#endregion
 //#region node_modules/@radix-ui/react-primitive/dist/index.mjs
+var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
+var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
 var import_jsx_runtime = require_jsx_runtime();
 var __defProp$10 = Object.defineProperty;
 var __name$10 = (target, value) => __defProp$10(target, "name", {
@@ -300,7 +31,7 @@ var Primitive = [
 	"svg",
 	"ul"
 ].reduce((primitive, node) => {
-	const Slot = /* @__PURE__ */ createSlot(`Primitive.${node}`);
+	const Slot = createSlot(`Primitive.${node}`);
 	const Node = import_react.forwardRef((props, forwardedRef) => {
 		const { asChild, ...primitiveProps } = props;
 		const Comp = asChild ? Slot : node;
@@ -904,9 +635,55 @@ function useControllableStateReducer(reducer, userArgs, initialArg, init) {
 }
 __name$3(useControllableStateReducer, "useControllableStateReducer");
 //#endregion
-//#region node_modules/@radix-ui/react-focus-scope/dist/index.mjs
+//#region node_modules/@radix-ui/react-focus-guards/dist/index.mjs
 var __defProp$2 = Object.defineProperty;
 var __name$2 = (target, value) => __defProp$2(target, "name", {
+	value,
+	configurable: true
+});
+var count = 0;
+var guards = null;
+function FocusGuards(props) {
+	useFocusGuards();
+	return props.children;
+}
+__name$2(FocusGuards, "FocusGuards");
+function useFocusGuards() {
+	import_react.useEffect(() => {
+		if (!guards) guards = {
+			start: createFocusGuard(),
+			end: createFocusGuard()
+		};
+		const { start, end } = guards;
+		if (document.body.firstElementChild !== start) document.body.insertAdjacentElement("afterbegin", start);
+		if (document.body.lastElementChild !== end) document.body.insertAdjacentElement("beforeend", end);
+		count++;
+		return () => {
+			if (count === 1) {
+				guards?.start.remove();
+				guards?.end.remove();
+				guards = null;
+			}
+			count = Math.max(0, count - 1);
+		};
+	}, []);
+}
+__name$2(useFocusGuards, "useFocusGuards");
+function createFocusGuard() {
+	const element = document.createElement("span");
+	element.setAttribute("data-radix-focus-guard", "");
+	element.tabIndex = 0;
+	element.style.outline = "none";
+	element.style.opacity = "0";
+	element.style.position = "fixed";
+	element.style.pointerEvents = "none";
+	return element;
+}
+__name$2(createFocusGuard, "createFocusGuard");
+//#endregion
+//#region node_modules/@radix-ui/react-focus-scope/dist/index.mjs
+var __defProp$1 = Object.defineProperty;
+var __name$1 = (target, value) => __defProp$1(target, "name", {
 	value,
 	configurable: true
 });
@@ -916,7 +693,7 @@ var EVENT_OPTIONS = {
 	bubbles: false,
 	cancelable: true
 };
-var FocusScope = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$2(function FocusScope2(props, forwardedRef) {
+var FocusScope = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$1(function FocusScope2(props, forwardedRef) {
 	const { loop = false, trapped = false, onMountAutoFocus: onMountAutoFocusProp, onUnmountAutoFocus: onUnmountAutoFocusProp, ...scopeProps } = props;
 	const [container, setContainer] = import_react.useState(null);
 	const onMountAutoFocus = useCallbackRef$1(onMountAutoFocusProp);
@@ -948,9 +725,9 @@ var FocusScope = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$
 				if (document.activeElement !== document.body) return;
 				for (const mutation of mutations) if (mutation.removedNodes.length > 0) focus(container);
 			};
-			__name$2(handleFocusIn2, "handleFocusIn");
-			__name$2(handleFocusOut2, "handleFocusOut");
-			__name$2(handleMutations2, "handleMutations");
+			__name$1(handleFocusIn2, "handleFocusIn");
+			__name$1(handleFocusOut2, "handleFocusOut");
+			__name$1(handleMutations2, "handleMutations");
 			document.addEventListener("focusin", handleFocusIn2);
 			document.addEventListener("focusout", handleFocusOut2);
 			const mutationObserver = new MutationObserver(handleMutations2);
@@ -1037,15 +814,15 @@ function focusFirst(candidates, { select = false } = {}) {
 		if (document.activeElement !== previouslyFocusedElement) return;
 	}
 }
-__name$2(focusFirst, "focusFirst");
+__name$1(focusFirst, "focusFirst");
 function getTabbableEdges(container) {
 	const candidates = getTabbableCandidates(container);
 	return [findVisible(candidates, container), findVisible(candidates.reverse(), container)];
 }
-__name$2(getTabbableEdges, "getTabbableEdges");
+__name$1(getTabbableEdges, "getTabbableEdges");
 function getTabbableCandidates(container) {
 	const nodes = [];
-	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: /* @__PURE__ */ __name$2((node) => {
+	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: /* @__PURE__ */ __name$1((node) => {
 		const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
 		if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP;
 		return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
@@ -1053,12 +830,12 @@ function getTabbableCandidates(container) {
 	while (walker.nextNode()) nodes.push(walker.currentNode);
 	return nodes;
 }
-__name$2(getTabbableCandidates, "getTabbableCandidates");
+__name$1(getTabbableCandidates, "getTabbableCandidates");
 function findVisible(elements, container) {
 	const canUseCheckVisibility = typeof container.checkVisibility === "function" && container.checkVisibility({ checkVisibilityCSS: true });
 	for (const element of elements) if (!(canUseCheckVisibility ? !element.checkVisibility({ checkVisibilityCSS: true }) : isHidden(element, { upTo: container }))) return element;
 }
-__name$2(findVisible, "findVisible");
+__name$1(findVisible, "findVisible");
 function isHidden(node, { upTo }) {
 	if (getComputedStyle(node).visibility === "hidden") return true;
 	while (node) {
@@ -1068,11 +845,11 @@ function isHidden(node, { upTo }) {
 	}
 	return false;
 }
-__name$2(isHidden, "isHidden");
+__name$1(isHidden, "isHidden");
 function isSelectableInput(element) {
 	return element instanceof HTMLInputElement && "select" in element;
 }
-__name$2(isSelectableInput, "isSelectableInput");
+__name$1(isSelectableInput, "isSelectableInput");
 function focus(element, { select = false } = {}) {
 	if (element && element.focus) {
 		const previouslyFocusedElement = document.activeElement;
@@ -1080,7 +857,7 @@ function focus(element, { select = false } = {}) {
 		if (element !== previouslyFocusedElement && isSelectableInput(element) && select) element.select();
 	}
 }
-__name$2(focus, "focus");
+__name$1(focus, "focus");
 var focusScopesStack = createFocusScopesStack();
 function createFocusScopesStack() {
 	let stack = [];
@@ -1097,64 +874,124 @@ function createFocusScopesStack() {
 		}
 	};
 }
-__name$2(createFocusScopesStack, "createFocusScopesStack");
+__name$1(createFocusScopesStack, "createFocusScopesStack");
 function arrayRemove(array, item) {
 	const updatedArray = [...array];
 	const index = updatedArray.indexOf(item);
 	if (index !== -1) updatedArray.splice(index, 1);
 	return updatedArray;
 }
-__name$2(arrayRemove, "arrayRemove");
+__name$1(arrayRemove, "arrayRemove");
 function removeLinks(items) {
 	return items.filter((item) => item.tagName !== "A");
 }
-__name$2(removeLinks, "removeLinks");
+__name$1(removeLinks, "removeLinks");
 //#endregion
-//#region node_modules/@radix-ui/react-focus-guards/dist/index.mjs
-var __defProp$1 = Object.defineProperty;
-var __name$1 = (target, value) => __defProp$1(target, "name", {
-	value,
-	configurable: true
-});
-var count = 0;
-var guards = null;
-function FocusGuards(props) {
-	useFocusGuards();
-	return props.children;
-}
-__name$1(FocusGuards, "FocusGuards");
-function useFocusGuards() {
-	import_react.useEffect(() => {
-		if (!guards) guards = {
-			start: createFocusGuard(),
-			end: createFocusGuard()
-		};
-		const { start, end } = guards;
-		if (document.body.firstElementChild !== start) document.body.insertAdjacentElement("afterbegin", start);
-		if (document.body.lastElementChild !== end) document.body.insertAdjacentElement("beforeend", end);
-		count++;
-		return () => {
-			if (count === 1) {
-				guards?.start.remove();
-				guards?.end.remove();
-				guards = null;
+//#region node_modules/aria-hidden/dist/es2015/index.js
+var getDefaultParent = function(originalTarget) {
+	if (typeof document === "undefined") return null;
+	return (Array.isArray(originalTarget) ? originalTarget[0] : originalTarget).ownerDocument.body;
+};
+var counterMap = /* @__PURE__ */ new WeakMap();
+var uncontrolledNodes = /* @__PURE__ */ new WeakMap();
+var markerMap = {};
+var lockCount = 0;
+var unwrapHost = function(node) {
+	return node && (node.host || unwrapHost(node.parentNode));
+};
+var correctTargets = function(parent, targets) {
+	return targets.map(function(target) {
+		if (parent.contains(target)) return target;
+		var correctedTarget = unwrapHost(target);
+		if (correctedTarget && parent.contains(correctedTarget)) return correctedTarget;
+		console.error("aria-hidden", target, "in not contained inside", parent, ". Doing nothing");
+		return null;
+	}).filter(function(x) {
+		return Boolean(x);
+	});
+};
+/**
+* Marks everything except given node(or nodes) as aria-hidden
+* @param {Element | Element[]} originalTarget - elements to keep on the page
+* @param [parentNode] - top element, defaults to document.body
+* @param {String} [markerName] - a special attribute to mark every node
+* @param {String} [controlAttribute] - html Attribute to control
+* @return {Undo} undo command
+*/
+var applyAttributeToOthers = function(originalTarget, parentNode, markerName, controlAttribute) {
+	var targets = correctTargets(parentNode, Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
+	if (!markerMap[markerName]) markerMap[markerName] = /* @__PURE__ */ new WeakMap();
+	var markerCounter = markerMap[markerName];
+	var hiddenNodes = [];
+	var elementsToKeep = /* @__PURE__ */ new Set();
+	var elementsToStop = new Set(targets);
+	var keep = function(el) {
+		if (!el || elementsToKeep.has(el)) return;
+		elementsToKeep.add(el);
+		keep(el.parentNode);
+	};
+	targets.forEach(keep);
+	var deep = function(parent) {
+		if (!parent || elementsToStop.has(parent)) return;
+		Array.prototype.forEach.call(parent.children, function(node) {
+			if (elementsToKeep.has(node)) deep(node);
+			else try {
+				var attr = node.getAttribute(controlAttribute);
+				var alreadyHidden = attr !== null && attr !== "false";
+				var counterValue = (counterMap.get(node) || 0) + 1;
+				var markerValue = (markerCounter.get(node) || 0) + 1;
+				counterMap.set(node, counterValue);
+				markerCounter.set(node, markerValue);
+				hiddenNodes.push(node);
+				if (counterValue === 1 && alreadyHidden) uncontrolledNodes.set(node, true);
+				if (markerValue === 1) node.setAttribute(markerName, "true");
+				if (!alreadyHidden) node.setAttribute(controlAttribute, "true");
+			} catch (e) {
+				console.error("aria-hidden: cannot operate on ", node, e);
 			}
-			count = Math.max(0, count - 1);
-		};
-	}, []);
-}
-__name$1(useFocusGuards, "useFocusGuards");
-function createFocusGuard() {
-	const element = document.createElement("span");
-	element.setAttribute("data-radix-focus-guard", "");
-	element.tabIndex = 0;
-	element.style.outline = "none";
-	element.style.opacity = "0";
-	element.style.position = "fixed";
-	element.style.pointerEvents = "none";
-	return element;
-}
-__name$1(createFocusGuard, "createFocusGuard");
+		});
+	};
+	deep(parentNode);
+	elementsToKeep.clear();
+	lockCount++;
+	return function() {
+		hiddenNodes.forEach(function(node) {
+			var counterValue = counterMap.get(node) - 1;
+			var markerValue = markerCounter.get(node) - 1;
+			counterMap.set(node, counterValue);
+			markerCounter.set(node, markerValue);
+			if (!counterValue) {
+				if (!uncontrolledNodes.has(node)) node.removeAttribute(controlAttribute);
+				uncontrolledNodes.delete(node);
+			}
+			if (!markerValue) node.removeAttribute(markerName);
+		});
+		lockCount--;
+		if (!lockCount) {
+			counterMap = /* @__PURE__ */ new WeakMap();
+			counterMap = /* @__PURE__ */ new WeakMap();
+			uncontrolledNodes = /* @__PURE__ */ new WeakMap();
+			markerMap = {};
+		}
+	};
+};
+/**
+* Marks everything except given node(or nodes) as aria-hidden
+* @param {Element | Element[]} originalTarget - elements to keep on the page
+* @param [parentNode] - top element, defaults to document.body
+* @param {String} [markerName] - a special attribute to mark every node
+* @return {Undo} undo command
+*/
+var hideOthers = function(originalTarget, parentNode, markerName) {
+	if (markerName === void 0) markerName = "data-aria-hidden";
+	var targets = Array.from(Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
+	var activeParentNode = parentNode || getDefaultParent(originalTarget);
+	if (!activeParentNode) return function() {
+		return null;
+	};
+	targets.push.apply(targets, Array.from(activeParentNode.querySelectorAll("[aria-live], script")));
+	return applyAttributeToOthers(targets, activeParentNode, markerName, "aria-hidden");
+};
 //#endregion
 //#region node_modules/react-remove-scroll-bar/dist/es2015/constants.js
 var zeroRightClassName = "right-scroll-bar-position";
@@ -1836,112 +1673,6 @@ var ReactRemoveScroll = import_react.forwardRef(function(props, ref) {
 });
 ReactRemoveScroll.classNames = RemoveScroll.classNames;
 //#endregion
-//#region node_modules/aria-hidden/dist/es2015/index.js
-var getDefaultParent = function(originalTarget) {
-	if (typeof document === "undefined") return null;
-	return (Array.isArray(originalTarget) ? originalTarget[0] : originalTarget).ownerDocument.body;
-};
-var counterMap = /* @__PURE__ */ new WeakMap();
-var uncontrolledNodes = /* @__PURE__ */ new WeakMap();
-var markerMap = {};
-var lockCount = 0;
-var unwrapHost = function(node) {
-	return node && (node.host || unwrapHost(node.parentNode));
-};
-var correctTargets = function(parent, targets) {
-	return targets.map(function(target) {
-		if (parent.contains(target)) return target;
-		var correctedTarget = unwrapHost(target);
-		if (correctedTarget && parent.contains(correctedTarget)) return correctedTarget;
-		console.error("aria-hidden", target, "in not contained inside", parent, ". Doing nothing");
-		return null;
-	}).filter(function(x) {
-		return Boolean(x);
-	});
-};
-/**
-* Marks everything except given node(or nodes) as aria-hidden
-* @param {Element | Element[]} originalTarget - elements to keep on the page
-* @param [parentNode] - top element, defaults to document.body
-* @param {String} [markerName] - a special attribute to mark every node
-* @param {String} [controlAttribute] - html Attribute to control
-* @return {Undo} undo command
-*/
-var applyAttributeToOthers = function(originalTarget, parentNode, markerName, controlAttribute) {
-	var targets = correctTargets(parentNode, Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
-	if (!markerMap[markerName]) markerMap[markerName] = /* @__PURE__ */ new WeakMap();
-	var markerCounter = markerMap[markerName];
-	var hiddenNodes = [];
-	var elementsToKeep = /* @__PURE__ */ new Set();
-	var elementsToStop = new Set(targets);
-	var keep = function(el) {
-		if (!el || elementsToKeep.has(el)) return;
-		elementsToKeep.add(el);
-		keep(el.parentNode);
-	};
-	targets.forEach(keep);
-	var deep = function(parent) {
-		if (!parent || elementsToStop.has(parent)) return;
-		Array.prototype.forEach.call(parent.children, function(node) {
-			if (elementsToKeep.has(node)) deep(node);
-			else try {
-				var attr = node.getAttribute(controlAttribute);
-				var alreadyHidden = attr !== null && attr !== "false";
-				var counterValue = (counterMap.get(node) || 0) + 1;
-				var markerValue = (markerCounter.get(node) || 0) + 1;
-				counterMap.set(node, counterValue);
-				markerCounter.set(node, markerValue);
-				hiddenNodes.push(node);
-				if (counterValue === 1 && alreadyHidden) uncontrolledNodes.set(node, true);
-				if (markerValue === 1) node.setAttribute(markerName, "true");
-				if (!alreadyHidden) node.setAttribute(controlAttribute, "true");
-			} catch (e) {
-				console.error("aria-hidden: cannot operate on ", node, e);
-			}
-		});
-	};
-	deep(parentNode);
-	elementsToKeep.clear();
-	lockCount++;
-	return function() {
-		hiddenNodes.forEach(function(node) {
-			var counterValue = counterMap.get(node) - 1;
-			var markerValue = markerCounter.get(node) - 1;
-			counterMap.set(node, counterValue);
-			markerCounter.set(node, markerValue);
-			if (!counterValue) {
-				if (!uncontrolledNodes.has(node)) node.removeAttribute(controlAttribute);
-				uncontrolledNodes.delete(node);
-			}
-			if (!markerValue) node.removeAttribute(markerName);
-		});
-		lockCount--;
-		if (!lockCount) {
-			counterMap = /* @__PURE__ */ new WeakMap();
-			counterMap = /* @__PURE__ */ new WeakMap();
-			uncontrolledNodes = /* @__PURE__ */ new WeakMap();
-			markerMap = {};
-		}
-	};
-};
-/**
-* Marks everything except given node(or nodes) as aria-hidden
-* @param {Element | Element[]} originalTarget - elements to keep on the page
-* @param [parentNode] - top element, defaults to document.body
-* @param {String} [markerName] - a special attribute to mark every node
-* @return {Undo} undo command
-*/
-var hideOthers = function(originalTarget, parentNode, markerName) {
-	if (markerName === void 0) markerName = "data-aria-hidden";
-	var targets = Array.from(Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
-	var activeParentNode = parentNode || getDefaultParent(originalTarget);
-	if (!activeParentNode) return function() {
-		return null;
-	};
-	targets.push.apply(targets, Array.from(activeParentNode.querySelectorAll("[aria-live], script")));
-	return applyAttributeToOthers(targets, activeParentNode, markerName, "aria-hidden");
-};
-//#endregion
 //#region node_modules/@radix-ui/react-dialog/dist/index.mjs
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", {
@@ -2012,7 +1743,7 @@ var DialogOverlay = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __na
 		})
 	}) : null;
 }, "DialogOverlay"));
-var Slot = /* @__PURE__ */ createSlot("DialogOverlay.RemoveScroll");
+var Slot = createSlot("DialogOverlay.RemoveScroll");
 var DialogOverlayImpl = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function DialogOverlayImpl2(props, forwardedRef) {
 	const { __scopeDialog, ...overlayProps } = props;
 	const context = useDialogContext(OVERLAY_NAME, __scopeDialog);
@@ -2158,4 +1889,4 @@ function getState(open) {
 }
 __name(getState, "getState");
 //#endregion
-export { DialogPortal as a, createSlottable as c, DialogOverlay as i, require_react_dom as l, DialogClose as n, DialogTitle as o, DialogContent as r, Slot$1 as s, Dialog as t };
+export { useCallbackRef$1 as _, DialogPortal as a, hideOthers as c, useControllableState as d, Presence as f, DismissableLayer as g, useLayoutEffect2 as h, DialogOverlay as i, FocusScope as l, useId as m, DialogClose as n, DialogTitle as o, Portal as p, DialogContent as r, ReactRemoveScroll as s, Dialog as t, useFocusGuards as u, Primitive as v, dispatchDiscreteCustomEvent as y };

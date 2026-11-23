@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { classify, typeLabel } from "@/lib/osint/classify";
+import { phoneHint } from "@/lib/osint/phone";
 import { runInvestigation } from "@/lib/osint/run";
 import { cn } from "@/lib/utils";
 
@@ -84,7 +85,9 @@ export function CommandBar({ initialQuery, compact }: { initialQuery?: string; c
         {value
           ? classified.type === "unknown"
             ? "Unrecognized. Paste a public identifier."
-            : `Will collect ${typeLabel(classified.type).toLowerCase()} intelligence for ${classified.normalized}`
+            : classified.type === "phone"
+              ? `Will collect numbering, carrier, directories, and public mentions for ${phoneHint(value) ?? classified.normalized}`
+              : `Will collect ${typeLabel(classified.type).toLowerCase()} intelligence for ${classified.normalized}`
           : "Press / to focus. Public sources only."}
       </p>
       )}

@@ -49,6 +49,35 @@ export const reconUrl = createServerFn({ method: "POST" })
     return collectUrl(data.url);
   });
 
+export const reconPhone = createServerFn({ method: "POST" })
+  .validator((d: { phone: string }) => ({ phone: str(d.phone, 32) }))
+  .handler(async ({ data }) => {
+    const { collectPhone } = await import("./collectors.server");
+    return collectPhone(data.phone);
+  });
+
+export const reconHash = createServerFn({ method: "POST" })
+  .validator((d: { hash: string; algo: string }) => ({
+    hash: str(d.hash, 128).toLowerCase(),
+    algo: str(d.algo, 16),
+  }))
+  .handler(async ({ data }) => {
+    const { collectHash } = await import("./collectors.server");
+    const algo = data.algo as "MD5" | "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512" | "unknown";
+    return collectHash(data.hash, algo);
+  });
+
+export const reconWallet = createServerFn({ method: "POST" })
+  .validator((d: { address: string; chain: string }) => ({
+    address: str(d.address, 128),
+    chain: str(d.chain, 16),
+  }))
+  .handler(async ({ data }) => {
+    const { collectWallet } = await import("./collectors.server");
+    const chain = data.chain === "bitcoin" || data.chain === "ethereum" ? data.chain : "unknown";
+    return collectWallet(data.address, chain);
+  });
+
 export const generateBrief = createServerFn({ method: "POST" })
   .validator((d: { facts: string; query: string }) => ({
     facts: str(d.facts, 12_000),

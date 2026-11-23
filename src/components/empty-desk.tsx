@@ -1,13 +1,14 @@
 import { CommandBar } from "@/components/command-bar";
 import { FathomMark } from "@/components/fathom-mark";
+import { TechniqueSamples } from "@/components/techniques-panel";
 import { Button } from "@/components/ui/button";
 import { runInvestigation } from "@/lib/osint/run";
 
 const SAMPLES = [
   { label: "torvalds", hint: "username" },
   { label: "cloudflare.com", hint: "domain" },
-  { label: "1.1.1.1", hint: "IP" },
-  { label: "https://github.com", hint: "URL" },
+  { label: "+61 412 345 678", hint: "AU mobile" },
+  { label: "+1 650-253-0000", hint: "US phone" },
 ];
 
 export function EmptyDesk() {
@@ -36,6 +37,7 @@ export function EmptyDesk() {
           </Button>
         ))}
       </div>
+      <TechniqueSamples onRun={(sample) => void runInvestigation(sample)} />
       <p className="mt-10 max-w-sm text-xs leading-relaxed text-subtle">
         Queries public registries and profile URLs only. No port scans, no credential stuffing, no paid breach dumps.
         Cases stay in this browser. Drop a photo to read EXIF locally.

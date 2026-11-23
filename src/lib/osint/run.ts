@@ -1,14 +1,15 @@
-import parsePhoneNumberFromString, { getCountryCallingCode } from "libphonenumber-js";
-import type { CountryCode } from "libphonenumber-js";
 import { classify, extractDomain, extractHost } from "./classify";
 import {
   generateBrief,
   reconDomain,
   reconEmail,
   reconGithub,
+  reconHash,
   reconIp,
+  reconPhone,
   reconUrl,
   reconUsername,
+  reconWallet,
 } from "./server";
 import { compactFacts } from "./report";
 import { useCaseStore } from "@/lib/cases/store";
@@ -46,37 +47,6 @@ async function load<K extends keyof CaseRecord["modules"]>(
       error: e instanceof Error ? e.message : "Failed",
     } as CaseRecord["modules"][K]);
   }
-}
-
-function phoneIntel(raw: string) {
-  const parsed = parsePhoneNumberFromString(raw) ?? parsePhoneNumberFromString(raw, "US");
-  const typeMap: Record<string, string> = {
-    MOBILE: "Mobile",
-    FIXED_LINE: "Fixed line",
-    FIXED_LINE_OR_MOBILE: "Fixed or mobile",
-    TOLL_FREE: "Toll-free",
-    PREMIUM_RATE: "Premium",
-    VOIP: "VoIP",
-    PERSONAL_NUMBER: "Personal",
-    PAGER: "Pager",
-    UAN: "UAN",
-    VOICEMAIL: "Voicemail",
-  };
-  return {
-    raw,
-    valid: parsed?.isValid() ?? false,
-    possible: parsed?.isPossible() ?? false,
-    e164: parsed?.number,
-    international: parsed?.formatInternational(),
-    national: parsed?.formatNational(),
-    country: parsed?.country,
-    countryCallingCode: parsed?.country
-      ? `+${getCountryCallingCode(parsed.country as CountryCode)}`
-      : parsed?.countryCallingCode
-        ? `+${parsed.countryCallingCode}`
-        : undefined,
-    type: parsed?.getType() ? typeMap[parsed.getType() as string] ?? parsed.getType() ?? undefined : undefined,
-  };
 }
 
 export async function runInvestigation(raw: string, extras?: { image?: ImageIntel }) {
@@ -152,22 +122,23 @@ export async function runInvestigation(raw: string, extras?: { image?: ImageInte
   }
 
   if (type === "phone") {
-    setModule(id, runId, "phone", { status: "ready", data: phoneIntel(normalized) });
+    jobs.push(load(id, runId, "phone", () => reconPhone({ data: { phone: normalized } })));
   }
 
   if (type === "hash") {
-    const bits = (classified.hashAlgo === "MD5" ? 128 : classified.hashAlgo === "SHA-1" ? 160 : classified.hashAlgo === "SHA-256" ? 256 : classified.hashAlgo === "SHA-384" ? 384 : classified.hashAlgo === "SHA-512" ? 512 : 0);
-    setModule(id, runId, "hash", {
-      status: "ready",
-      data: { value: normalized, algo: classified.hashAlgo ?? "unknown", bits },
-    });
+    jobs.push(
+      load(id, runId, "hash", () =>
+        reconHash({ data: { hash: normalized, algo: classified.hashAlgo ?? "unknown" } }),
+      ),
+    );
   }
 
   if (type === "wallet") {
-    setModule(id, runId, "wallet", {
-      status: "ready",
-      data: { address: normalized, chain: classified.chain ?? "unknown" },
-    });
+    jobs.push(
+      load(id, runId, "wallet", () =>
+        reconWallet({ data: { address: normalized, chain: classified.chain ?? "unknown" } }),
+      ),
+    );
   }
 
   await Promise.all(jobs);

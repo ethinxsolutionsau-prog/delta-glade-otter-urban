@@ -1,3 +1,4 @@
+import { parseAnyPhone } from "./phone";
 import type { IdType } from "./types";
 
 export type PivotLink = {
@@ -76,12 +77,39 @@ export function pivotLinks(type: IdType, value: string): PivotLink[] {
   }
 
   if (type === "phone") {
+    const parsed = parseAnyPhone(q);
     const digits = q.replace(/\D/g, "");
+    const e164 = parsed?.number ?? (q.startsWith("+") ? q : `+${digits}`);
+    const national = parsed?.formatNational() ?? digits;
+    const iso = (parsed?.country ?? "AU").toLowerCase();
+    const wa = e164.replace(/\D/g, "");
     links.push(
-      { group: "People", label: "Truecaller", href: `https://www.truecaller.com/search/us/${digits}` },
-      { group: "Search", label: "Quoted number", href: g(`"${q}"`) },
-      { group: "Search", label: "Digits only", href: g(`"${digits}"`) },
+      { group: "Search", label: "Google quoted E.164", href: g(`"${e164}"`) },
+      { group: "Search", label: "Google national format", href: g(`"${national}"`) },
+      { group: "Search", label: "DuckDuckGo", href: ddg(`"${e164}" OR "${national}"`) },
+      { group: "Search", label: "Paste sites", href: g(`"${e164}" OR "${national}" site:pastebin.com OR site:ghostbin.com`) },
+      { group: "People", label: "Truecaller", href: `https://www.truecaller.com/search/${iso}/${encodeURIComponent(national.replace(/\s+/g, ""))}` },
+      { group: "People", label: "Should I Answer", href: `https://www.shouldianswer.com/phone-number/${wa}` },
+      { group: "People", label: "NumLookup", href: `https://www.numlookup.com/phone-number/${encodeURIComponent(e164)}` },
+      { group: "People", label: "Sync.me", href: `https://sync.me/search/?number=${encodeURIComponent(e164)}` },
+      { group: "Messaging", label: "WhatsApp", href: `https://wa.me/${wa}` },
+      { group: "Code", label: "GitHub code", href: `https://github.com/search?q=${encodeURIComponent(e164)}&type=code` },
     );
+    if (iso === "au") {
+      const local = national.replace(/\D/g, "");
+      links.push(
+        { group: "Australia", label: "Reverse Australia", href: `https://www.reverseaustralia.com/lookup/${local}/` },
+        { group: "Australia", label: "White Pages", href: "https://www.whitepages.com.au/" },
+        { group: "Australia", label: "ACMA numbering", href: "https://www.acma.gov.au/phone-numbers" },
+      );
+    }
+    if (iso === "us" || iso === "ca") {
+      const n = wa.replace(/^1/, "");
+      links.push(
+        { group: "NANP", label: "800notes", href: `https://800notes.com/Phone.aspx/${n.slice(0, 3)}-${n.slice(3, 6)}-${n.slice(6)}` },
+        { group: "NANP", label: "Whitepages", href: `https://www.whitepages.com/phone/${n}` },
+      );
+    }
   }
 
   if (type === "hash") {

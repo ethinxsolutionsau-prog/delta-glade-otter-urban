@@ -25,6 +25,10 @@ export type UsernameHit = {
   category: string;
   url: string;
   status: "found" | "absent" | "unknown";
+  detail?: string;
+  bio?: string;
+  followers?: number;
+  avatar?: string;
   httpStatus?: number;
 };
 
@@ -60,6 +64,7 @@ export type EmailIntel = {
   validSyntax: boolean;
   roleAccount: boolean;
   disposable: boolean;
+  mx: string[];
   gravatar: {
     hash: string;
     hasImage: boolean;
@@ -107,6 +112,12 @@ export type DomainIntel = {
     samples: { timestamp: string; original: string; status?: string }[];
   };
   http: HttpProbe | null;
+  emailAuth?: {
+    spf?: string;
+    spfAll?: string;
+    dmarc?: string;
+    dmarcPolicy?: string;
+  };
 };
 
 export type HttpProbe = {
@@ -164,6 +175,13 @@ export type UrlIntel = {
   http: HttpProbe | null;
 };
 
+export type PhoneSighting = {
+  title: string;
+  url: string;
+  snippet?: string;
+  source: string;
+};
+
 export type PhoneIntel = {
   raw: string;
   valid: boolean;
@@ -171,20 +189,72 @@ export type PhoneIntel = {
   e164?: string;
   international?: string;
   national?: string;
+  rfc3966?: string;
+  digits?: string;
   country?: string;
+  countryName?: string;
   countryCallingCode?: string;
   type?: string;
+  region?: string;
+  city?: string;
+  timezones?: string[];
+  carrier?: string;
+  carrierPrefix?: string;
+  carrierNote?: string;
+  lineType?: string;
+  mcc?: string;
+  geoSource?: string;
+  nanp?: {
+    npa: string;
+    nxx: string;
+    company?: string;
+    rateCenter?: string;
+    region?: string;
+    lata?: string;
+    switchName?: string;
+    lat?: number;
+    lon?: number;
+  };
+  reputation?: { source: string; summary: string; url: string }[];
+  directory?: {
+    source: string;
+    url: string;
+    phoneType?: string;
+    holder?: string;
+    area?: string;
+    lastFound?: string;
+    complaintsTotal?: number;
+    complaintsYear?: number;
+    spamNote?: string;
+    names?: string[];
+    address?: string;
+  };
+  sightings?: PhoneSighting[];
+  notes?: string[];
 };
 
 export type HashIntel = {
   value: string;
   algo: "MD5" | "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512" | "unknown";
   bits: number;
+  known?: boolean;
+  fileName?: string;
+  fileSize?: string;
+  md5?: string;
+  sha1?: string;
+  source?: string;
+  message?: string;
 };
 
 export type WalletIntel = {
   address: string;
   chain: "bitcoin" | "ethereum" | "unknown";
+  balance?: string;
+  received?: string;
+  txCount?: number;
+  ens?: string;
+  explorer?: string;
+  message?: string;
 };
 
 export type ImageIntel = {

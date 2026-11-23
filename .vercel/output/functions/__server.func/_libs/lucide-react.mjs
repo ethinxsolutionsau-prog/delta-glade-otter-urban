@@ -1,5 +1,5 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { n as require_react } from "./@radix-ui/react-compose-refs+[...].mjs";
+import { u as require_react } from "./@floating-ui/react-dom+[...].mjs";
 //#region node_modules/lucide-react/dist/esm/shared/src/utils.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 /**
@@ -97,6 +97,16 @@ var AtSign = createLucideIcon("at-sign", [["circle", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var ChevronDown = createLucideIcon("chevron-down", [["path", {
+	d: "m6 9 6 6 6-6",
+	key: "qrunsl"
+}]]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Copy = createLucideIcon("copy", [["rect", {
 	width: "14",
 	height: "14",
@@ -150,6 +160,30 @@ var ExternalLink = createLucideIcon("external-link", [
 	["path", {
 		d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6",
 		key: "a6xqqp"
+	}]
+]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var FileCode = createLucideIcon("file-code", [
+	["path", {
+		d: "M10 12.5 8 15l2 2.5",
+		key: "1tg20x"
+	}],
+	["path", {
+		d: "m14 12.5 2 2.5-2 2.5",
+		key: "yinavb"
+	}],
+	["path", {
+		d: "M14 2v4a2 2 0 0 0 2 2h4",
+		key: "tnqrlb"
+	}],
+	["path", {
+		d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z",
+		key: "1mlx9k"
 	}]
 ]);
 /**
@@ -595,4 +629,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { Download as C, ExternalLink as S, AtSign as T, Hash as _, Trash2 as a, FolderOpen as b, Server as c, Printer as d, Plus as f, Image as g, LoaderCircle as h, TriangleAlert as i, Search as l, Network as m, Wallet as n, StickyNote as o, Phone as p, User as r, Shield as s, X as t, ScanText as u, Globe as v, Copy as w, FileText as x, Github as y };
+export { ExternalLink as C, AtSign as D, ChevronDown as E, FileCode as S, Copy as T, Hash as _, Trash2 as a, FolderOpen as b, Server as c, Printer as d, Plus as f, Image as g, LoaderCircle as h, TriangleAlert as i, Search as l, Network as m, Wallet as n, StickyNote as o, Phone as p, User as r, Shield as s, X as t, ScanText as u, Globe as v, Download as w, FileText as x, Github as y };

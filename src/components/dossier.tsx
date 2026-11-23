@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { format } from "date-fns";
 import {
   AtSign,
@@ -16,12 +16,15 @@ import {
   Wallet,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ExportMenu } from "@/components/export-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EntityGraph } from "@/components/entity-graph";
+import { TechniqueReport } from "@/components/techniques-panel";
 import { typeLabel } from "@/lib/osint/classify";
 import { pivotLinks } from "@/lib/osint/dorks";
+import { phoneFindings } from "@/lib/osint/phone";
 import { PIVOT_PLATFORMS } from "@/lib/osint/platforms";
 import { signalCount } from "@/lib/osint/report";
 import { copyText, cn } from "@/lib/utils";
@@ -40,7 +43,7 @@ import type {
   WalletIntel,
 } from "@/lib/osint/types";
 
-type Tab = "overview" | "graph" | "pivots";
+type Tab = "overview" | "graph" | "pivots" | "methods";
 
 function StatusBadge({ status }: { status: ModuleState<unknown>["status"] }) {
   if (status === "loading") return <Badge variant="accent">Collecting</Badge>;
@@ -109,13 +112,52 @@ function Ext({ href, children }: { href: string; children: ReactNode }) {
 }
 
 function UsernameCard({ data }: { data: UsernameIntel }) {
+  const social = data.hits.filter(
+    (h) => h.status === "found" && (h.category === "Social" || h.category === "Creative"),
+  );
   return (
-    <div>
-      <p className="mb-3 font-mono text-xs text-muted">
-        {data.found} found · {data.checked} live-checked
+    <div className="space-y-5">
+      <p className="font-mono text-xs text-muted">
+        {data.found} found · {data.checked} live-checked · {social.length} social
+      </p>
+      {social.length ? (
+        <ul className="flex flex-col gap-2">
+          {social.map((h) => (
+            <li key={h.id} className="rounded-lg border border-border bg-elevated px-3 py-3">
+              <div className="flex items-start gap-3">
+                {h.avatar ? (
+                  <img src={h.avatar} alt="" width={40} height={40} className="size-10 rounded-md border border-border object-cover" />
+                ) : null}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-sm text-fg">
+                      {h.name}
+                      {h.detail ? <span className="text-muted"> · {h.detail}</span> : null}
+                    </p>
+                    <Ext href={h.url}>
+                      <Badge variant="ok">Open</Badge>
+                    </Ext>
+                  </div>
+                  {h.followers != null ? (
+                    <p className="text-xs text-subtle">{h.followers.toLocaleString()} followers</p>
+                  ) : null}
+                  {h.bio ? <p className="mt-1 text-sm text-muted">{h.bio}</p> : null}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-muted">No confirmed YouTube, TikTok, Twitch, Bluesky, Mastodon, Tumblr, or Steam account.</p>
+      )}
+      <p className="text-xs text-subtle">
+        A hit means that username is registered. It does not prove the accounts belong to the same person. X, Instagram,
+        Reddit, and Facebook are not checked.
       </p>
       <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
-        {data.hits.map((h) => (
+        {data.hits
+          .filter((h) => !(h.status === "found" && (h.category === "Social" || h.category === "Creative")))
+          .map((h) => (
           <li
             key={h.id}
             className="flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-elevated"
@@ -185,6 +227,7 @@ function EmailCard({ data }: { data: EmailIntel }) {
         <Kv label="Domain" value={data.domain} mono />
         <Kv label="Role account" value={data.roleAccount ? "Yes" : "No"} />
         <Kv label="Disposable" value={data.disposable ? "Likely" : "Unlikely"} />
+        <Kv label="MX" value={data.mx?.join(" · ") || undefined} mono />
         <Kv
           label="Gravatar"
           value={
@@ -216,6 +259,17 @@ function DomainCard({ data }: { data: DomainIntel }) {
         <Kv label="Status" value={data.rdap?.status?.join(", ")} />
         <Kv label="NS" value={data.nameservers.join(" · ") || undefined} mono />
         <Kv label="MX" value={data.mx.join(" · ") || undefined} mono />
+        <Kv label="SPF" value={data.emailAuth?.spfAll || (data.emailAuth?.spf ? "Present" : data.emailAuth ? "Absent" : undefined)} />
+        <Kv
+          label="DMARC"
+          value={
+            data.emailAuth?.dmarcPolicy
+              ? `p=${data.emailAuth.dmarcPolicy}`
+              : data.emailAuth
+                ? "Absent"
+                : undefined
+          }
+        />
         <Kv label="A / AAAA" value={data.ips.join(" · ") || undefined} mono />
         <Kv label="Title" value={data.http?.title} />
         <Kv label="Server" value={data.http?.server} />
@@ -303,17 +357,148 @@ function UrlCard({ data }: { data: UrlIntel }) {
 }
 
 function PhoneCard({ data }: { data: PhoneIntel }) {
+  const pivots = pivotLinks("phone", data.e164 || data.raw);
+  const findings = phoneFindings(data);
+  const mentionCount = data.sightings?.length ?? 0;
+  const dirCount = data.reputation?.length ?? 0;
+  const directory = data.directory;
+  const mapQuery = directory?.address || (data.city ? `${data.city}, ${data.countryName ?? ""}` : undefined);
+  const mapHref = data.nanp?.lat != null && data.nanp.lon != null
+    ? `https://www.google.com/maps?q=${data.nanp.lat},${data.nanp.lon}`
+    : mapQuery
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
+      : undefined;
+  const directoryRows = [
+    directory?.holder ? { label: "Holder", value: directory.holder } : null,
+    directory?.area ? { label: "Area", value: directory.area } : null,
+    directory?.phoneType ? { label: "Line", value: directory.phoneType } : null,
+    directory?.lastFound ? { label: "Last seen", value: directory.lastFound } : null,
+    directory?.complaintsTotal != null
+      ? { label: "Reports", value: `${directory.complaintsYear ?? 0} this year · ${directory.complaintsTotal} total` }
+      : null,
+    directory?.names?.length ? { label: "Names", value: directory.names.join(" · ") } : null,
+    directory?.address ? { label: "Address", value: directory.address } : null,
+  ].filter((row): row is { label: string; value: string } => Boolean(row));
+
   return (
-    <dl>
-      <Kv label="Valid" value={data.valid ? "Yes" : "No"} />
-      <Kv label="Possible" value={data.possible ? "Yes" : "No"} />
-      <Kv label="E.164" value={data.e164} mono />
-      <Kv label="International" value={data.international} />
-      <Kv label="National" value={data.national} />
-      <Kv label="Country" value={data.country} />
-      <Kv label="Code" value={data.countryCallingCode} />
-      <Kv label="Type" value={data.type} />
-    </dl>
+    <div className="space-y-5">
+      <p className="font-mono text-xs text-muted">
+        {directoryRows.length} directory fields · {findings.length} numbering results · {mentionCount} public pages
+      </p>
+      {directory && directoryRows.length > 0 ? (
+        <div className="rounded-lg border border-border bg-elevated p-3">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <p className="text-xs uppercase tracking-[0.14em] text-subtle">{directory.source}</p>
+            <a href={directory.url} target="_blank" rel="noreferrer" className="text-sm text-accent hover:underline">
+              Open listing
+            </a>
+          </div>
+          <dl>
+            {directoryRows.map((row) => (
+              <Kv
+                key={row.label}
+                label={row.label}
+                value={
+                  row.label === "Address" && mapHref ? <Ext href={mapHref}>{row.value}</Ext> : row.value
+                }
+              />
+            ))}
+          </dl>
+          {directory.spamNote ? <p className="mt-2 text-sm text-warn">{directory.spamNote}</p> : null}
+        </div>
+      ) : data.country === "AU" ? (
+        <p className="text-sm text-muted">No Reverse Australia listing published a holder, area, or name for this number.</p>
+      ) : null}
+      <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+        {findings.map((row) => (
+          <li key={row.id} className="rounded-md px-2 py-2">
+            <p className="text-xs text-subtle">{row.label}</p>
+            <p className="text-sm text-fg">
+              {row.id === "coords" && mapHref ? <Ext href={mapHref}>{row.value}</Ext> : row.value}
+            </p>
+            <p className="text-xs text-subtle">{row.source}</p>
+          </li>
+        ))}
+      </ul>
+      {data.nanp?.switchName ? (
+        <dl>
+          <Kv label="Switch" value={data.nanp.switchName} mono />
+          <Kv label="NPA-NXX" value={`${data.nanp.npa}-${data.nanp.nxx}`} mono />
+        </dl>
+      ) : null}
+      {dirCount > 0 ? (
+        <div>
+          <p className="mb-2 text-xs uppercase tracking-[0.14em] text-subtle">Reverse directories · {dirCount}</p>
+          <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+            {data.reputation?.map((row) => (
+              <li key={row.url}>
+                <a
+                  href={row.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-elevated"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm text-fg">{row.source}</p>
+                    <p className="truncate text-xs text-subtle">{row.summary}</p>
+                  </div>
+                  <Badge variant="ok">Open</Badge>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {mentionCount > 0 ? (
+        <div>
+          <p className="mb-2 text-xs uppercase tracking-[0.14em] text-subtle">
+            Pages that quote this number · {mentionCount}
+          </p>
+          <ul className="space-y-1">
+            {data.sightings?.map((hit) => (
+              <li key={hit.url}>
+                <a
+                  href={hit.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block rounded-md px-2 py-2 hover:bg-elevated"
+                >
+                  <p className="text-sm text-fg">{hit.title}</p>
+                  {hit.snippet ? <p className="mt-0.5 text-xs text-subtle">{hit.snippet}</p> : null}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : directory?.names?.length ? null : (
+        <p className="text-sm text-muted">
+          No extra web page quotes this exact number. Subscriber name only appears when a public directory already
+          publishes it.
+        </p>
+      )}
+      <div>
+        <p className="mb-2 text-xs uppercase tracking-[0.14em] text-subtle">Open on</p>
+        <div className="flex flex-wrap gap-2">
+          {pivots.map((p) => (
+            <a
+              key={p.href}
+              href={p.href}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-11 items-center rounded-md border border-border bg-elevated px-3 text-sm text-fg hover:border-accent/40"
+            >
+              {p.label}
+            </a>
+          ))}
+        </div>
+      </div>
+      {data.carrierNote ? <p className="text-xs text-subtle">{data.carrierNote}</p> : null}
+      {data.notes?.map((n) => (
+        <p key={n} className="text-xs text-subtle">
+          {n}
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -322,7 +507,14 @@ function HashCard({ data }: { data: HashIntel }) {
     <dl>
       <Kv label="Algorithm" value={data.algo} />
       <Kv label="Bits" value={data.bits || undefined} />
+      <Kv label="Known" value={data.known === undefined ? undefined : data.known ? "Yes" : "No"} />
+      <Kv label="File" value={data.fileName} />
+      <Kv label="Size" value={data.fileSize ? `${data.fileSize} bytes` : undefined} />
+      <Kv label="Source" value={data.source} />
+      <Kv label="MD5" value={data.md5} mono />
+      <Kv label="SHA-1" value={data.sha1} mono />
       <Kv label="Value" value={data.value} mono />
+      {data.message ? <p className="mt-2 text-sm text-muted">{data.message}</p> : null}
     </dl>
   );
 }
@@ -332,6 +524,12 @@ function WalletCard({ data }: { data: WalletIntel }) {
     <dl>
       <Kv label="Chain" value={data.chain} />
       <Kv label="Address" value={data.address} mono />
+      <Kv label="Balance" value={data.balance} mono />
+      <Kv label="Received" value={data.received} mono />
+      <Kv label="Transactions" value={data.txCount} />
+      <Kv label="ENS" value={data.ens} />
+      <Kv label="Explorer" value={data.explorer ? <Ext href={data.explorer}>Open</Ext> : undefined} />
+      {data.message ? <p className="mt-2 text-sm text-muted">{data.message}</p> : null}
     </dl>
   );
 }
@@ -364,6 +562,9 @@ function ImageCard({ data }: { data: ImageIntel }) {
 
 export function Dossier({ record }: { record: CaseRecord }) {
   const [tab, setTab] = useState<Tab>("overview");
+  useEffect(() => {
+    setTab("overview");
+  }, [record.id]);
   const m = record.modules;
   const pivots = pivotLinks(record.type, record.query);
   const groups = [...new Set(pivots.map((p) => p.group))];
@@ -388,21 +589,25 @@ export function Dossier({ record }: { record: CaseRecord }) {
               </span>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              void copyText(record.query).then(() => toast.success("Copied target"));
-            }}
-          >
-            <Copy className="size-3.5" />
-            Copy
-          </Button>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                void copyText(record.query).then(() => toast.success("Copied target"));
+              }}
+            >
+              <Copy className="size-3.5" />
+              Copy
+            </Button>
+            <ExportMenu record={record} />
+          </div>
         </div>
         <div className="flex gap-1 rounded-lg bg-elevated p-1">
           {(
             [
               ["overview", "Overview"],
+              ["methods", "Methods"],
               ["graph", "Graph"],
               ["pivots", "Pivots"],
             ] as const
@@ -421,6 +626,8 @@ export function Dossier({ record }: { record: CaseRecord }) {
           ))}
         </div>
       </header>
+
+      {tab === "methods" ? <TechniqueReport record={record} /> : null}
 
       {tab === "graph" ? <EntityGraph record={record} /> : null}
 

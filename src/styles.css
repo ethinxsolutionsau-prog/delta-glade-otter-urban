@@ -106,16 +106,36 @@
 }
 
 @media print {
+  :root {
+    --color-bg: #ffffff;
+    --color-surface: #ffffff;
+    --color-elevated: #f4f4f6;
+    --color-fg: #16161a;
+    --color-muted: #4a4a52;
+    --color-subtle: #5c5c64;
+    --color-border: #d4d4da;
+    --color-accent: #3d5270;
+    --color-primary: #16161a;
+    --color-primary-fg: #ffffff;
+  }
+
   header,
   aside,
   .no-print {
     display: none !important;
   }
+
   main {
     overflow: visible !important;
   }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
   body {
-    background: white;
-    color: #111;
+    background: #ffffff;
+    color: #16161a;
   }
 }

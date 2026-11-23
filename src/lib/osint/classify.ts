@@ -1,4 +1,4 @@
-import parsePhoneNumberFromString from "libphonenumber-js";
+import { looksLikePhone, parseAnyPhone } from "./phone";
 import type { Classified, HashIntel, IdType, WalletIntel } from "./types";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -75,19 +75,15 @@ export function classify(raw: string): Classified {
     };
   }
 
-  const phone = parsePhoneNumberFromString(q.includes("+") ? q : q.replace(/^[0]/, "+"));
-  const digits = q.replace(/\D/g, "");
-  if (
-    (q.startsWith("+") || /^[\d\s().-]{8,}$/.test(q)) &&
-    digits.length >= 8 &&
-    digits.length <= 15 &&
-    (phone?.isPossible() || phone?.isValid())
-  ) {
-    return {
-      type: "phone",
-      normalized: phone?.number ?? q,
-      display,
-    };
+  if (looksLikePhone(q)) {
+    const phone = parseAnyPhone(q);
+    if (phone?.isPossible()) {
+      return {
+        type: "phone",
+        normalized: phone.number,
+        display,
+      };
+    }
   }
 
   const asDomain = q.replace(/\.$/, "").toLowerCase();

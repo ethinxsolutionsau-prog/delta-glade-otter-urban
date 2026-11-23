@@ -1,12 +1,12 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
-import { _ as useRouter, f as createRouter, g as createRootRoute, h as createFileRoute, l as Scripts, m as lazyRouteComponent, p as Outlet, u as HeadContent } from "../_libs/@tanstack/react-router+[...].mjs";
-import { n as require_jsx_runtime } from "../_libs/radix-ui__react-context+react.mjs";
+import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
+import { _ as createFileRoute, d as Scripts, f as HeadContent, g as lazyRouteComponent, h as Outlet, m as createRouter, v as createRootRoute, y as useRouter } from "../_libs/@tanstack/react-router+[...].mjs";
+import { s as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { i as TriangleAlert } from "../_libs/lucide-react.mjs";
 import { a as union, i as string, n as number, r as object, t as literal } from "../_libs/zod.mjs";
 import { t as Provider } from "../_libs/radix-ui__react-tooltip.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-BDsikLNN.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-CcgGT8vJ.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var __defProp = Object.defineProperty;
@@ -316,7 +316,7 @@ function TooltipProvider(props) {
 		...props
 	});
 }
-var styles_default = "/assets/styles-B3K9uCFN.css";
+var styles_default = "/assets/styles-C9yZL2tL.css";
 var APP_NAME = "Fathom";
 var Route$1 = createRootRoute({
 	head: () => ({
@@ -387,7 +387,7 @@ var Route$1 = createRootRoute({
 		})]
 	})
 });
-var $$splitComponentImporter = () => import("./routes-TE1QcSUd.mjs");
+var $$splitComponentImporter = () => import("./routes-gxLYBV5M.mjs");
 var Route = createFileRoute("/")({
 	validateSearch: (raw) => ({ q: typeof raw.q === "string" ? raw.q : void 0 }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")

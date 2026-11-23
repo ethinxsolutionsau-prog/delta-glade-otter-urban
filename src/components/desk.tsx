@@ -61,12 +61,11 @@ export function Desk({ initialQuery }: { initialQuery?: string }) {
   const ranQuery = useRef(false);
 
   useEffect(() => {
-    if (hydrated) return;
-    const t = window.setTimeout(() => {
-      if (!useCaseStore.getState().hasHydrated) useCaseStore.getState().setHasHydrated(true);
-    }, 80);
-    return () => window.clearTimeout(t);
-  }, [hydrated]);
+    const result = useCaseStore.persist.rehydrate();
+    void Promise.resolve(result).finally(() => {
+      useCaseStore.getState().setHasHydrated(true);
+    });
+  }, []);
 
   useEffect(() => {
     if (!initialQuery || !hydrated || ranQuery.current) return;
@@ -136,13 +135,7 @@ export function Desk({ initialQuery }: { initialQuery?: string }) {
           <CaseRail />
         </aside>
         <main className="min-w-0 flex-1 overflow-y-auto scrollbar-thin">
-          {!hydrated ? (
-            <div className="px-6 py-16 text-sm text-muted">Restoring cases…</div>
-          ) : active ? (
-            <Dossier record={active} />
-          ) : (
-            <EmptyDesk />
-          )}
+          {active ? <Dossier record={active} /> : <EmptyDesk />}
         </main>
         {active ? (
           <aside className="no-print hidden w-80 shrink-0 border-l border-border p-4 xl:block">

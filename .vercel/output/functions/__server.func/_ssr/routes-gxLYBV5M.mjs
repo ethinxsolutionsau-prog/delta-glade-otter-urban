@@ -1,19 +1,19 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { n as PIVOT_PLATFORMS } from "./platforms-BrjVkNGf.mjs";
-import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
-import { n as require_jsx_runtime } from "../_libs/radix-ui__react-context+react.mjs";
-import { C as Download, S as ExternalLink, T as AtSign, _ as Hash, a as Trash2, b as FolderOpen, c as Server, d as Printer, f as Plus, g as Image, h as LoaderCircle, l as Search, m as Network, n as Wallet, o as StickyNote, p as Phone, r as User, s as Shield, t as X, u as ScanText, v as Globe, w as Copy, x as FileText, y as Github } from "../_libs/lucide-react.mjs";
-import { a as DialogPortal, i as DialogOverlay, n as DialogClose, o as DialogTitle, r as DialogContent, s as Slot, t as Dialog } from "../_libs/@radix-ui/react-dialog+[...].mjs";
+import { i as phoneHint, n as parseAnyPhone, r as phoneFindings, t as looksLikePhone } from "./phone-B5bXib8h.mjs";
+import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
+import { n as Slot, s as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { C as ExternalLink, D as AtSign, E as ChevronDown, S as FileCode, T as Copy, _ as Hash, a as Trash2, b as FolderOpen, c as Server, d as Printer, f as Plus, g as Image, h as LoaderCircle, l as Search, m as Network, n as Wallet, o as StickyNote, p as Phone, r as User, s as Shield, t as X, u as ScanText, v as Globe, w as Download, x as FileText, y as Github } from "../_libs/lucide-react.mjs";
+import { a as DialogPortal, i as DialogOverlay, n as DialogClose, o as DialogTitle, r as DialogContent, t as Dialog } from "../_libs/@radix-ui/react-dialog+[...].mjs";
+import { a as Trigger, i as Root2, n as Item2, r as Portal2, t as Content2 } from "../_libs/@radix-ui/react-dropdown-menu+[...].mjs";
 import { n as toast } from "../_libs/sonner.mjs";
-import { n as Route } from "./router-BDsikLNN.mjs";
+import { n as Route } from "./router-CcgGT8vJ.mjs";
 import { n as TSS_SERVER_FUNCTION, r as getServerFnById, t as createServerFn } from "./ssr.mjs";
 import { n as clsx, t as cva } from "../_libs/class-variance-authority+clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { t as tt } from "../_libs/exifr.mjs";
 import { n as format, t as formatDistanceToNow } from "../_libs/date-fns.mjs";
 import { n as create, t as persist } from "../_libs/zustand.mjs";
-import { n as parsePhoneNumber, t as getCountryCallingCode } from "../_libs/libphonenumber-js.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-TE1QcSUd.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-gxLYBV5M.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function cn(...inputs) {
@@ -119,13 +119,11 @@ var useCaseStore = create()(persist((set, get) => ({
 	}
 }), {
 	name: "fathom-cases",
+	skipHydration: true,
 	partialize: (s) => ({
 		cases: s.cases,
 		activeId: s.activeId
-	}),
-	onRehydrateStorage: () => () => {
-		useCaseStore.getState().setHasHydrated(true);
-	}
+	})
 }));
 function useActiveCase() {
 	return useCaseStore((s) => s.cases.find((c) => c.id === s.activeId) ?? null);
@@ -196,13 +194,14 @@ function classify(raw) {
 		display,
 		hashAlgo: HASH_LEN[q.length]
 	};
-	const phone = parsePhoneNumber(q.includes("+") ? q : q.replace(/^[0]/, "+"));
-	const digits = q.replace(/\D/g, "");
-	if ((q.startsWith("+") || /^[\d\s().-]{8,}$/.test(q)) && digits.length >= 8 && digits.length <= 15 && (phone?.isPossible() || phone?.isValid())) return {
-		type: "phone",
-		normalized: phone?.number ?? q,
-		display
-	};
+	if (looksLikePhone(q)) {
+		const phone = parseAnyPhone(q);
+		if (phone?.isPossible()) return {
+			type: "phone",
+			normalized: phone.number,
+			display
+		};
+	}
 	const asDomain = q.replace(/\.$/, "").toLowerCase();
 	if (DOMAIN_RE.test(asDomain) && asDomain.includes(".")) return {
 		type: "domain",
@@ -253,93 +252,20 @@ function extractDomain(host) {
 	])).has(second) && last.length === 2) return parts.slice(-3).join(".");
 	return parts.slice(-2).join(".");
 }
-function CaseRail() {
-	const cases = useCaseStore((s) => s.cases);
-	const activeId = useCaseStore((s) => s.activeId);
-	const setActive = useCaseStore((s) => s.setActive);
-	const openNew = useCaseStore((s) => s.openNew);
-	const remove = useCaseStore((s) => s.remove);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		className: "flex h-full flex-col",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "mb-3 flex items-center justify-between",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				className: "text-xs font-medium uppercase tracking-[0.16em] text-subtle",
-				children: "Cases"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				variant: "ghost",
-				size: "icon-sm",
-				onClick: openNew,
-				"aria-label": "New investigation",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, { className: "size-4" })
-			})]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto scrollbar-thin",
-			children: cases.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				className: "text-sm text-muted",
-				children: "No saved cases yet. Run an investigation to start a dossier."
-			}) : cases.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: cn("group flex items-start gap-2 rounded-md border px-3 py-2.5 transition-colors duration-[var(--motion-quick)]", c.id === activeId ? "border-border bg-elevated" : "border-transparent hover:bg-elevated/70"),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					type: "button",
-					className: "min-w-0 flex-1 text-left",
-					onClick: () => setActive(c.id),
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "truncate font-mono text-sm text-fg",
-						children: c.query
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						className: "mt-1 flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, { children: typeLabel(c.type) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							className: "text-xs text-subtle tabular-nums",
-							children: formatDistanceToNow(c.updatedAt, { addSuffix: true })
-						})]
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					variant: "ghost",
-					size: "icon-sm",
-					className: "opacity-0 group-hover:opacity-100",
-					"aria-label": `Delete ${c.query}`,
-					onClick: () => remove(c.id),
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, { className: "size-3.5 text-muted" })
-				})]
-			}, c.id))
-		})]
+function escapeHtml(value) {
+	return value.replace(/[&<>"']/g, (ch) => {
+		switch (ch) {
+			case "&": return "&amp;";
+			case "<": return "&lt;";
+			case ">": return "&gt;";
+			case "\"": return "&quot;";
+			default: return "&#39;";
+		}
 	});
 }
-function Input({ className, ...props }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-		className: cn("flex h-11 w-full rounded-md border border-border bg-elevated px-3 text-sm text-fg placeholder:text-subtle", "transition-[border-color,box-shadow] duration-[var(--motion-quick)] ease-[var(--ease-out)]", "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50", "disabled:opacity-40", className),
-		...props
-	});
+function fileStem(record) {
+	return `fathom-${record.query.trim().replace(/[^\w.-]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 60) || record.id}`;
 }
-var createSsrRpc = (functionId) => {
-	const url = "/_serverFn/" + functionId;
-	const serverFnMeta = { id: functionId };
-	const fn = async (...args) => {
-		return (await getServerFnById(functionId, { origin: "server" }))(...args);
-	};
-	return Object.assign(fn, {
-		url,
-		serverFnMeta,
-		[TSS_SERVER_FUNCTION]: true
-	});
-};
-function str(v, max) {
-	if (typeof v !== "string") throw new Error("invalid");
-	const s = v.trim();
-	if (!s || s.length > max) throw new Error("invalid");
-	return s;
-}
-var reconUsername = createServerFn({ method: "POST" }).validator((d) => ({ username: str(d.username, 64) })).handler(createSsrRpc("2e5be6340dd9c6843a4b18735df4fca0f045acdf15fe81094ca05ed8d4f3a2f0"));
-var reconGithub = createServerFn({ method: "POST" }).validator((d) => ({ username: str(d.username, 64) })).handler(createSsrRpc("08fd78146b6a2704000b5bc41ff939602049612259f94365920686808a66fdba"));
-var reconEmail = createServerFn({ method: "POST" }).validator((d) => ({ email: str(d.email, 254).toLowerCase() })).handler(createSsrRpc("8dc1747b8478f261a46decf96efcbad9adc9972a1863ca6c7b4e167c0ae22540"));
-var reconDomain = createServerFn({ method: "POST" }).validator((d) => ({ domain: str(d.domain, 253).toLowerCase() })).handler(createSsrRpc("41ffc14549090a732f3bae82665d4016a6a115f3ced5159e6baf0ce0da9ba3a7"));
-var reconIp = createServerFn({ method: "POST" }).validator((d) => ({ ip: str(d.ip, 64) })).handler(createSsrRpc("8cba289e0b70e1a31198868f7cddf7c13468da10482f7f63ee2ea3b420926908"));
-var reconUrl = createServerFn({ method: "POST" }).validator((d) => ({ url: str(d.url, 2048) })).handler(createSsrRpc("e4282222e931c5bc279173b6e243e5a1fcf65b6f56b3cd17e1aa4593ef07f691"));
-var generateBrief = createServerFn({ method: "POST" }).validator((d) => ({
-	facts: str(d.facts, 12e3),
-	query: str(d.query, 400)
-})).handler(createSsrRpc("dc8ca333f29ea1e2ae48f9d52626e41eb77b5d246eb8f68fd7602016fac65e95"));
 function compactFacts(record) {
 	const username = record.modules.username?.data;
 	const github = record.modules.github?.data;
@@ -368,12 +294,15 @@ function compactFacts(record) {
 		} : github?.message,
 		profiles: username?.hits.filter((h) => h.status === "found").map((h) => ({
 			name: h.name,
-			url: h.url
+			url: h.url,
+			detail: h.detail
 		})),
+		absent: username?.hits.filter((h) => h.status === "absent").map((h) => h.name),
 		email: email ? {
 			email: email.email,
 			disposable: email.disposable,
 			role: email.roleAccount,
+			mx: email.mx,
 			gravatar: email.gravatar.hasImage,
 			gravatarName: email.gravatar.displayName
 		} : void 0,
@@ -388,6 +317,8 @@ function compactFacts(record) {
 			status: domain.rdap?.status,
 			title: domain.http?.title,
 			server: domain.http?.server,
+			spf: domain.emailAuth?.spfAll,
+			dmarc: domain.emailAuth?.dmarcPolicy,
 			subdomains: domain.subdomains.slice(0, 20),
 			waybackFirst: domain.wayback.first,
 			txtSample: domain.txt.slice(0, 6)
@@ -416,10 +347,29 @@ function compactFacts(record) {
 			e164: phone.e164,
 			valid: phone.valid,
 			type: phone.type,
-			country: phone.country
+			country: phone.countryName || phone.country,
+			carrier: phone.carrier,
+			holder: phone.directory?.holder,
+			area: phone.directory?.area,
+			names: phone.directory?.names,
+			address: phone.directory?.address,
+			complaints: phone.directory?.complaintsTotal,
+			city: phone.city,
+			region: phone.region,
+			sightings: phone.sightings?.length
 		} : void 0,
-		hash,
-		wallet,
+		hash: hash ? {
+			algo: hash.algo,
+			known: hash.known,
+			file: hash.fileName,
+			source: hash.source
+		} : void 0,
+		wallet: wallet ? {
+			chain: wallet.chain,
+			balance: wallet.balance,
+			txCount: wallet.txCount,
+			ens: wallet.ens
+		} : void 0,
 		image: image ? {
 			file: image.fileName,
 			camera: [image.make, image.model].filter(Boolean).join(" "),
@@ -430,20 +380,167 @@ function compactFacts(record) {
 		notes: record.notes || void 0
 	};
 }
+function kv(label, value) {
+	if (value === void 0 || value === null || value === "") return [];
+	return [`- **${label}:** ${typeof value === "boolean" ? value ? "Yes" : "No" : String(value)}`];
+}
 function toMarkdown(record) {
 	const lines = [
 		`# Fathom dossier — ${record.query}`,
 		``,
-		`- Type: ${typeLabel(record.type)}`,
-		`- Collected: ${new Date(record.updatedAt).toISOString()}`,
-		`- Case: ${record.id}`,
+		`- **Type:** ${typeLabel(record.type)}`,
+		`- **Collected:** ${new Date(record.updatedAt).toISOString()}`,
+		`- **Case:** ${record.id}`,
+		`- **Signals:** ${signalCount(record)}`,
 		``
 	];
-	if (record.brief) lines.push(`## Analyst brief`, ``, record.brief, ``);
-	const facts = compactFacts(record);
-	lines.push(`## Structured findings`, ``, "```json", JSON.stringify(facts, null, 2), "```");
-	if (record.notes) lines.push(``, `## Notes`, ``, record.notes);
-	return lines.join("\n");
+	if (record.brief) lines.push(`## Analyst brief`, ``, record.brief.trim(), ``);
+	const github = record.modules.github?.data;
+	if (github?.found) {
+		lines.push(`## GitHub`, ``);
+		lines.push(...kv("Login", github.login));
+		lines.push(...kv("Name", github.name));
+		lines.push(...kv("Profile", github.htmlUrl));
+		lines.push(...kv("Bio", github.bio));
+		lines.push(...kv("Company", github.company));
+		lines.push(...kv("Location", github.location));
+		lines.push(...kv("Blog", github.blog));
+		lines.push(...kv("X", github.twitter));
+		lines.push(...kv("Repos", github.publicRepos));
+		lines.push(...kv("Followers", github.followers));
+		lines.push(...kv("Created", github.createdAt));
+		lines.push(``);
+	} else if (github && !github.found) lines.push(`## GitHub`, ``, github.message ?? "No public profile", ``);
+	const email = record.modules.email?.data;
+	if (email) {
+		lines.push(`## Email`, ``);
+		lines.push(...kv("Address", email.email));
+		lines.push(...kv("Role account", email.roleAccount));
+		lines.push(...kv("Disposable", email.disposable));
+		lines.push(...kv("MX", email.mx.join(", ") || void 0));
+		lines.push(...kv("Gravatar", email.gravatar.hasImage ? email.gravatar.displayName || "Image present" : "No public image"));
+		lines.push(``);
+	}
+	const username = record.modules.username?.data;
+	if (username) {
+		const found = username.hits.filter((h) => h.status === "found");
+		const absent = username.hits.filter((h) => h.status === "absent");
+		lines.push(`## Username sweep`, ``, `Checked ${username.checked} platforms. ${found.length} confirmed.`, ``);
+		if (found.length) {
+			lines.push(`### Confirmed profiles`, ``);
+			for (const h of found) lines.push(`- [${h.name}](${h.url})${h.detail ? ` — ${h.detail}` : ""}`);
+			lines.push(``);
+		}
+		if (absent.length) lines.push(`### Not found`, ``, absent.map((h) => h.name).join(", "), ``);
+	}
+	const domain = record.modules.domain?.data;
+	if (domain) {
+		lines.push(`## Domain`, ``);
+		lines.push(...kv("Domain", domain.domain));
+		lines.push(...kv("Registrar", domain.rdap?.registrar));
+		lines.push(...kv("Registered", domain.rdap?.registered));
+		lines.push(...kv("Expires", domain.rdap?.expires));
+		lines.push(...kv("Status", domain.rdap?.status?.join(", ")));
+		lines.push(...kv("Nameservers", domain.nameservers.join(", ") || void 0));
+		lines.push(...kv("MX", domain.mx.join(", ") || void 0));
+		lines.push(...kv("A / AAAA", domain.ips.join(", ") || void 0));
+		lines.push(...kv("Title", domain.http?.title));
+		lines.push(...kv("Server", domain.http?.server));
+		lines.push(...kv("SPF", domain.emailAuth?.spfAll));
+		lines.push(...kv("DMARC", domain.emailAuth?.dmarcPolicy));
+		if (domain.subdomains.length) lines.push(``, `### Hostnames`, ``, domain.subdomains.map((s) => `- \`${s}\``).join("\n"), ``);
+	}
+	const ips = record.modules.ip?.data;
+	if (ips?.length) {
+		lines.push(`## IP`, ``);
+		for (const ip of ips) {
+			lines.push(`### ${ip.ip}`, ``);
+			lines.push(...kv("Geo", [
+				ip.city,
+				ip.region,
+				ip.country
+			].filter(Boolean).join(", ")));
+			lines.push(...kv("ISP", ip.isp));
+			lines.push(...kv("Org", ip.org));
+			lines.push(...kv("ASN", ip.asn ? `AS${ip.asn}` : void 0));
+			lines.push(...kv("Name", ip.asname));
+			lines.push(...kv("Reverse", ip.reverse));
+			lines.push(...kv("Hosting", ip.isHosting));
+			lines.push(...kv("CIDR", ip.rdap?.cidr));
+			lines.push(``);
+		}
+	}
+	const url = record.modules.url?.data;
+	if (url) {
+		lines.push(`## URL`, ``);
+		lines.push(...kv("Final", url.finalUrl));
+		lines.push(...kv("Title", url.http?.title));
+		lines.push(...kv("Server", url.http?.server));
+		lines.push(``);
+	}
+	const phone = record.modules.phone?.data;
+	if (phone) {
+		lines.push(`## Phone`, ``);
+		lines.push(...kv("Valid", phone.valid));
+		lines.push(...kv("E.164", phone.e164));
+		lines.push(...kv("International", phone.international));
+		lines.push(...kv("Country", phone.countryName || phone.country));
+		lines.push(...kv("Type", phone.type));
+		lines.push(...kv("Carrier", phone.carrier));
+		lines.push(...kv("Holder", phone.directory?.holder));
+		lines.push(...kv("Area", phone.directory?.area));
+		lines.push(...kv("Names", phone.directory?.names?.join(", ")));
+		lines.push(...kv("Address", phone.directory?.address));
+		lines.push(...kv("Complaints", phone.directory?.complaintsTotal));
+		lines.push(...kv("City", phone.city));
+		lines.push(...kv("Region", phone.region));
+		if (phone.sightings?.length) {
+			lines.push(``, `### Public mentions`, ``);
+			for (const hit of phone.sightings) lines.push(`- [${hit.title}](${hit.url})`);
+			lines.push(``);
+		}
+	}
+	const image = record.modules.image?.data;
+	if (image) {
+		lines.push(`## Image EXIF`, ``);
+		lines.push(...kv("File", image.fileName));
+		lines.push(...kv("Camera", [image.make, image.model].filter(Boolean).join(" ")));
+		lines.push(...kv("Taken", image.dateOriginal));
+		lines.push(...kv("GPS", image.gps ? `${image.gps.lat}, ${image.gps.lon}` : void 0));
+		lines.push(``);
+	}
+	if (record.notes.trim()) lines.push(`## Notes`, ``, record.notes.trim(), ``);
+	return lines.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+function toHtml(record) {
+	const body = escapeHtml(toMarkdown(record)).replace(/^# (.*)$/gm, "<h1>$1</h1>").replace(/^## (.*)$/gm, "<h2>$1</h2>").replace(/^### (.*)$/gm, "<h3>$1</h3>").replace(/^- \*\*(.*?):\*\* (.*)$/gm, "<p><span>$1</span> $2</p>").replace(/^- \[(.*?)\]\((.*?)\)(?: — (.*))?$/gm, "<p><a href=\"$2\">$1</a> $3</p>").replace(/^- `(.*)`$/gm, "<p><code>$1</code></p>").replace(/^- (.*)$/gm, "<p>$1</p>").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\n\n/g, "\n");
+	return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fathom — ${escapeHtml(record.query)}</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; background: #f4f4f2; color: #16161a; font: 15px/1.5 "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; }
+  main { max-width: 44rem; margin: 2.5rem auto; background: #fff; border: 1px solid #d8d8de; padding: 2rem 2.25rem; }
+  h1 { font-size: 1.5rem; font-weight: 500; margin: 0 0 1rem; letter-spacing: -0.02em; }
+  h2 { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6b6b73; margin: 1.75rem 0 0.6rem; }
+  h3 { font-size: 1rem; font-weight: 500; margin: 1rem 0 0.4rem; }
+  p { margin: 0.2rem 0; }
+  p span { display: inline-block; min-width: 7.5rem; color: #6b6b73; }
+  a { color: #3d5270; }
+  code { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 0.86em; }
+  footer { margin-top: 2rem; color: #6b6b73; font-size: 12px; }
+  @media print { body { background: #fff; } main { border: 0; margin: 0; padding: 0; } }
+</style>
+</head>
+<body>
+<main>${body}
+<footer>Public-source collection only. Generated by Fathom.</footer>
+</main>
+</body>
+</html>`;
 }
 function signalCount(record) {
 	let n = 0;
@@ -455,10 +552,154 @@ function signalCount(record) {
 	if (d) n += d.ips.length + (d.rdap ? 1 : 0) + (d.http?.title ? 1 : 0) + d.subdomains.length;
 	n += record.modules.ip?.data?.length ?? 0;
 	if (record.modules.url?.data?.http?.status) n += 1;
-	if (record.modules.phone?.data?.valid) n += 1;
+	const phone = record.modules.phone?.data;
+	if (phone) {
+		n += phoneFindings(phone).length;
+		if (phone.directory?.holder) n += 1;
+		if (phone.directory?.names?.length) n += phone.directory.names.length;
+		n += phone.sightings?.length ?? 0;
+		n += phone.reputation?.length ?? 0;
+	}
 	if (record.modules.image?.data?.gps) n += 1;
+	if ((record.modules.hash?.data)?.known) n += 1;
+	if (record.modules.wallet?.data?.balance) n += 1;
+	if (record.modules.domain?.data?.emailAuth?.spf) n += 1;
+	if (record.modules.domain?.data?.emailAuth?.dmarc) n += 1;
 	return n;
 }
+function downloadText(filename, text, mime) {
+	const blob = new Blob([text], { type: `${mime};charset=utf-8` });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement("a");
+	a.href = url;
+	a.download = filename;
+	a.rel = "noopener";
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
+	window.setTimeout(() => URL.revokeObjectURL(url), 2500);
+}
+function exportMarkdown(record) {
+	downloadText(`${fileStem(record)}.md`, toMarkdown(record), "text/markdown");
+}
+function exportJson(record) {
+	downloadText(`${fileStem(record)}.json`, JSON.stringify(record, null, 2), "application/json");
+}
+function exportHtml(record) {
+	downloadText(`${fileStem(record)}.html`, toHtml(record), "text/html");
+}
+function exportAllCases(cases) {
+	downloadText(`fathom-cases-${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}.json`, JSON.stringify(cases, null, 2), "application/json");
+}
+function CaseRail() {
+	const cases = useCaseStore((s) => s.cases);
+	const activeId = useCaseStore((s) => s.activeId);
+	const setActive = useCaseStore((s) => s.setActive);
+	const openNew = useCaseStore((s) => s.openNew);
+	const remove = useCaseStore((s) => s.remove);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "flex h-full flex-col",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mb-3 flex items-center justify-between",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs font-medium uppercase tracking-[0.16em] text-subtle",
+				children: "Cases"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex items-center",
+				children: [cases.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					variant: "ghost",
+					size: "icon-sm",
+					"aria-label": "Export all cases",
+					onClick: () => {
+						exportAllCases(cases);
+						toast.success("All cases downloaded");
+					},
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "size-4" })
+				}) : null, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					variant: "ghost",
+					size: "icon-sm",
+					onClick: openNew,
+					"aria-label": "New investigation",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, { className: "size-4" })
+				})]
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto scrollbar-thin",
+			children: cases.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm text-muted",
+				children: "No saved cases yet. Run an investigation to start a dossier."
+			}) : cases.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: cn("group flex items-start gap-2 rounded-md border px-3 py-2.5 transition-colors duration-[var(--motion-quick)]", c.id === activeId ? "border-border bg-elevated" : "border-transparent hover:bg-elevated/70"),
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					type: "button",
+					className: "min-h-11 min-w-0 flex-1 text-left",
+					onClick: () => setActive(c.id),
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "truncate font-mono text-sm text-fg",
+						children: c.query
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "mt-1 flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, { children: typeLabel(c.type) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "text-xs text-subtle tabular-nums",
+							children: formatDistanceToNow(c.updatedAt, { addSuffix: true })
+						})]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					variant: "ghost",
+					size: "icon-sm",
+					className: "opacity-0 group-hover:opacity-100",
+					"aria-label": `Delete ${c.query}`,
+					onClick: () => remove(c.id),
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, { className: "size-3.5 text-muted" })
+				})]
+			}, c.id))
+		})]
+	});
+}
+var Input = (0, import_react.forwardRef)(function Input({ className, ...props }, ref) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+		ref,
+		className: cn("flex h-11 w-full rounded-md border border-border bg-elevated px-3 text-sm text-fg placeholder:text-subtle", "transition-[border-color,box-shadow] duration-[var(--motion-quick)] ease-[var(--ease-out)]", "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50", "disabled:opacity-40", className),
+		...props
+	});
+});
+var createSsrRpc = (functionId) => {
+	const url = "/_serverFn/" + functionId;
+	const serverFnMeta = { id: functionId };
+	const fn = async (...args) => {
+		return (await getServerFnById(functionId, { origin: "server" }))(...args);
+	};
+	return Object.assign(fn, {
+		url,
+		serverFnMeta,
+		[TSS_SERVER_FUNCTION]: true
+	});
+};
+function str(v, max) {
+	if (typeof v !== "string") throw new Error("invalid");
+	const s = v.trim();
+	if (!s || s.length > max) throw new Error("invalid");
+	return s;
+}
+var reconUsername = createServerFn({ method: "POST" }).validator((d) => ({ username: str(d.username, 64) })).handler(createSsrRpc("2e5be6340dd9c6843a4b18735df4fca0f045acdf15fe81094ca05ed8d4f3a2f0"));
+var reconGithub = createServerFn({ method: "POST" }).validator((d) => ({ username: str(d.username, 64) })).handler(createSsrRpc("08fd78146b6a2704000b5bc41ff939602049612259f94365920686808a66fdba"));
+var reconEmail = createServerFn({ method: "POST" }).validator((d) => ({ email: str(d.email, 254).toLowerCase() })).handler(createSsrRpc("8dc1747b8478f261a46decf96efcbad9adc9972a1863ca6c7b4e167c0ae22540"));
+var reconDomain = createServerFn({ method: "POST" }).validator((d) => ({ domain: str(d.domain, 253).toLowerCase() })).handler(createSsrRpc("41ffc14549090a732f3bae82665d4016a6a115f3ced5159e6baf0ce0da9ba3a7"));
+var reconIp = createServerFn({ method: "POST" }).validator((d) => ({ ip: str(d.ip, 64) })).handler(createSsrRpc("8cba289e0b70e1a31198868f7cddf7c13468da10482f7f63ee2ea3b420926908"));
+var reconUrl = createServerFn({ method: "POST" }).validator((d) => ({ url: str(d.url, 2048) })).handler(createSsrRpc("e4282222e931c5bc279173b6e243e5a1fcf65b6f56b3cd17e1aa4593ef07f691"));
+var reconPhone = createServerFn({ method: "POST" }).validator((d) => ({ phone: str(d.phone, 32) })).handler(createSsrRpc("4ad3655e047f1cbd9ebae198a5a08ae3db8e2fdf7730badcf97fdac01dcbd22c"));
+var reconHash = createServerFn({ method: "POST" }).validator((d) => ({
+	hash: str(d.hash, 128).toLowerCase(),
+	algo: str(d.algo, 16)
+})).handler(createSsrRpc("1ca4320098cc64c9934ca7068483826153503970b4eddf60a8ded1da3722a974"));
+var reconWallet = createServerFn({ method: "POST" }).validator((d) => ({
+	address: str(d.address, 128),
+	chain: str(d.chain, 16)
+})).handler(createSsrRpc("2b14b4f8a8a1bce53f750cd24ab4c6077558acdfad4daac8e53c3c9c9d5ec5df"));
+var generateBrief = createServerFn({ method: "POST" }).validator((d) => ({
+	facts: str(d.facts, 12e3),
+	query: str(d.query, 400)
+})).handler(createSsrRpc("dc8ca333f29ea1e2ae48f9d52626e41eb77b5d246eb8f68fd7602016fac65e95"));
 function setModule(id, runId, key, state) {
 	useCaseStore.getState().patch(id, (c) => {
 		if (c.runId !== runId) return c;
@@ -485,31 +726,6 @@ async function load(id, runId, key, fn) {
 			error: e instanceof Error ? e.message : "Failed"
 		});
 	}
-}
-function phoneIntel(raw) {
-	const parsed = parsePhoneNumber(raw) ?? parsePhoneNumber(raw, "US");
-	return {
-		raw,
-		valid: parsed?.isValid() ?? false,
-		possible: parsed?.isPossible() ?? false,
-		e164: parsed?.number,
-		international: parsed?.formatInternational(),
-		national: parsed?.formatNational(),
-		country: parsed?.country,
-		countryCallingCode: parsed?.country ? `+${getCountryCallingCode(parsed.country)}` : parsed?.countryCallingCode ? `+${parsed.countryCallingCode}` : void 0,
-		type: parsed?.getType() ? {
-			MOBILE: "Mobile",
-			FIXED_LINE: "Fixed line",
-			FIXED_LINE_OR_MOBILE: "Fixed or mobile",
-			TOLL_FREE: "Toll-free",
-			PREMIUM_RATE: "Premium",
-			VOIP: "VoIP",
-			PERSONAL_NUMBER: "Personal",
-			PAGER: "Pager",
-			UAN: "UAN",
-			VOICEMAIL: "Voicemail"
-		}[parsed.getType()] ?? parsed.getType() ?? void 0 : void 0
-	};
 }
 async function runInvestigation(raw, extras) {
 	if (extras?.image) {
@@ -564,28 +780,15 @@ async function runInvestigation(raw, extras) {
 	if (type === "ipv4" || type === "ipv6") jobs.push(load(id, runId, "ip", async () => {
 		return [await reconIp({ data: { ip: normalized } })];
 	}));
-	if (type === "phone") setModule(id, runId, "phone", {
-		status: "ready",
-		data: phoneIntel(normalized)
-	});
-	if (type === "hash") {
-		const bits = classified.hashAlgo === "MD5" ? 128 : classified.hashAlgo === "SHA-1" ? 160 : classified.hashAlgo === "SHA-256" ? 256 : classified.hashAlgo === "SHA-384" ? 384 : classified.hashAlgo === "SHA-512" ? 512 : 0;
-		setModule(id, runId, "hash", {
-			status: "ready",
-			data: {
-				value: normalized,
-				algo: classified.hashAlgo ?? "unknown",
-				bits
-			}
-		});
-	}
-	if (type === "wallet") setModule(id, runId, "wallet", {
-		status: "ready",
-		data: {
-			address: normalized,
-			chain: classified.chain ?? "unknown"
-		}
-	});
+	if (type === "phone") jobs.push(load(id, runId, "phone", () => reconPhone({ data: { phone: normalized } })));
+	if (type === "hash") jobs.push(load(id, runId, "hash", () => reconHash({ data: {
+		hash: normalized,
+		algo: classified.hashAlgo ?? "unknown"
+	} })));
+	if (type === "wallet") jobs.push(load(id, runId, "wallet", () => reconWallet({ data: {
+		address: normalized,
+		chain: classified.chain ?? "unknown"
+	} })));
 	await Promise.all(jobs);
 	const latest = useCaseStore.getState().cases.find((c) => c.id === id);
 	const domainIps = latest?.modules.domain?.data?.ips.filter((ip) => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(ip)).slice(0, 2) ?? [];
@@ -697,9 +900,74 @@ function CommandBar({ initialQuery, compact }) {
 			})]
 		}), compact ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 			className: cn("px-1 font-mono text-xs text-subtle", classified.type === "unknown" && value && "text-warn"),
-			children: value ? classified.type === "unknown" ? "Unrecognized. Paste a public identifier." : `Will collect ${typeLabel(classified.type).toLowerCase()} intelligence for ${classified.normalized}` : "Press / to focus. Public sources only."
+			children: value ? classified.type === "unknown" ? "Unrecognized. Paste a public identifier." : classified.type === "phone" ? `Will collect numbering, carrier, directories, and public mentions for ${phoneHint(value) ?? classified.normalized}` : `Will collect ${typeLabel(classified.type).toLowerCase()} intelligence for ${classified.normalized}` : "Press / to focus. Public sources only."
 		})]
 	});
+}
+var DropdownMenu = Root2;
+var DropdownMenuTrigger = Trigger;
+function DropdownMenuContent({ className, sideOffset = 6, ...props }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal2, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2, {
+		sideOffset,
+		className: cn("z-50 min-w-48 rounded-md border border-border bg-surface p-1 shadow-lg outline-none", "data-[state=open]:opacity-100 data-[state=closed]:opacity-0", "origin-[var(--radix-dropdown-menu-content-transform-origin)]", "transition-[opacity,transform] duration-[var(--motion-fast)] ease-[var(--ease-smooth-out)]", className),
+		...props
+	}) });
+}
+function DropdownMenuItem({ className, ...props }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item2, {
+		className: cn("flex min-h-10 cursor-pointer items-center gap-2 rounded-sm px-2.5 text-sm text-fg outline-none", "data-[highlighted]:bg-elevated", className),
+		...props
+	});
+}
+function ExportMenu({ record }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenu, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuTrigger, {
+		asChild: true,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+			variant: "outline",
+			size: "sm",
+			"aria-label": "Export dossier",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "size-3.5" }),
+				"Export",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, { className: "size-3.5 text-muted" })
+			]
+		})
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuContent, {
+		align: "end",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuItem, {
+				onSelect: () => {
+					exportMarkdown(record);
+					toast.success("Markdown report downloaded");
+				},
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileText, { className: "size-3.5 text-muted" }), "Markdown report"]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuItem, {
+				onSelect: () => {
+					exportHtml(record);
+					toast.success("HTML report downloaded");
+				},
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileCode, { className: "size-3.5 text-muted" }), "HTML report"]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuItem, {
+				onSelect: () => {
+					exportJson(record);
+					toast.success("JSON case file downloaded");
+				},
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "size-3.5 text-muted" }), "JSON case file"]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuItem, {
+				onSelect: () => {
+					copyText(toMarkdown(record)).then(() => toast.success("Report copied"), () => toast.error("Could not copy"));
+				},
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, { className: "size-3.5 text-muted" }), "Copy markdown"]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuItem, {
+				onSelect: () => window.print(),
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Printer, { className: "size-3.5 text-muted" }), "Print / save PDF"]
+			})
+		]
+	})] });
 }
 function Skeleton({ className }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: cn("rounded-md bg-elevated animate-fathom-pulse", className) });
@@ -826,11 +1094,21 @@ function buildGraph(record) {
 			label: phone.international ?? phone.e164,
 			kind: "identity"
 		}, "target", "phone");
-		if (phone.country) add({
-			id: `place:${phone.country}`,
-			label: phone.country,
+		if (phone.carrier) add({
+			id: `car:${phone.carrier}`,
+			label: phone.carrier,
+			kind: "infra"
+		}, `ph:${phone.e164}`, "carrier");
+		const place = [
+			phone.city,
+			phone.region,
+			phone.countryName || phone.country
+		].filter(Boolean).join(", ");
+		if (place) add({
+			id: `place:${place}`,
+			label: place,
 			kind: "place"
-		}, `ph:${phone.e164}`, "country");
+		}, `ph:${phone.e164}`, "geo");
 	}
 	const image = record.modules.image?.data;
 	if (image?.gps) {
@@ -926,6 +1204,230 @@ function EntityGraph({ record }) {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 			className: "mt-2 text-center text-xs text-subtle",
 			children: "Click a labeled node to pivot a new investigation."
+		})]
+	});
+}
+var TECHNIQUES = [
+	{
+		id: "classify",
+		name: "Classification",
+		applies: "all",
+		mode: "live",
+		summary: "Decide what the input is before any request leaves the desk."
+	},
+	{
+		id: "username",
+		name: "Username enumeration",
+		applies: ["username", "email"],
+		mode: "live",
+		summary: "A profile counts only when that site's API confirms the account.",
+		sample: "torvalds"
+	},
+	{
+		id: "social",
+		name: "Social profiles",
+		applies: ["username", "email"],
+		mode: "live",
+		summary: "YouTube, TikTok, Twitch, Bluesky, Mastodon, Tumblr, Steam, and public communities. X, Instagram, and Reddit stay as pivots.",
+		sample: "pokimane"
+	},
+	{
+		id: "github",
+		name: "Code profile",
+		applies: ["username"],
+		mode: "live",
+		summary: "Public GitHub identity: name, company, repos, followers.",
+		sample: "torvalds"
+	},
+	{
+		id: "dns",
+		name: "Passive DNS",
+		applies: [
+			"domain",
+			"email",
+			"url"
+		],
+		mode: "live",
+		summary: "A, AAAA, MX, NS, TXT, and SOA over DNS-over-HTTPS. No port scan.",
+		sample: "cloudflare.com"
+	},
+	{
+		id: "rdap",
+		name: "Registration",
+		applies: [
+			"domain",
+			"ipv4",
+			"ipv6"
+		],
+		mode: "live",
+		summary: "Registrar, dates, status, and network name from RDAP.",
+		sample: "cloudflare.com"
+	},
+	{
+		id: "ct",
+		name: "Certificate transparency",
+		applies: ["domain", "url"],
+		mode: "live",
+		summary: "Hostnames published in certificate logs, plus a short name brute.",
+		sample: "cloudflare.com"
+	},
+	{
+		id: "mail",
+		name: "Mail authentication",
+		applies: ["domain", "email"],
+		mode: "live",
+		summary: "SPF from the domain TXT record and DMARC from _dmarc.",
+		sample: "cloudflare.com"
+	},
+	{
+		id: "http",
+		name: "HTTP fingerprint",
+		applies: ["domain", "url"],
+		mode: "live",
+		summary: "Title, server, HSTS, security.txt, and the redirect chain.",
+		sample: "https://github.com"
+	},
+	{
+		id: "geo",
+		name: "IP geolocation",
+		applies: [
+			"ipv4",
+			"ipv6",
+			"domain"
+		],
+		mode: "live",
+		summary: "Country, city, ASN, and whether the address looks like hosting.",
+		sample: "1.1.1.1"
+	},
+	{
+		id: "phone",
+		name: "Numbering and directory",
+		applies: ["phone"],
+		mode: "live",
+		summary: "National plan, original carrier block, and a published reverse listing if one exists.",
+		sample: "+61 412 345 678"
+	},
+	{
+		id: "hash",
+		name: "File hash lookup",
+		applies: ["hash"],
+		mode: "live",
+		summary: "CIRCL's public hash lookup for known files. Not a private malware sandbox.",
+		sample: "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+	},
+	{
+		id: "wallet",
+		name: "Public chain",
+		applies: ["wallet"],
+		mode: "live",
+		summary: "Balance and transaction count from a public block explorer.",
+		sample: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+	},
+	{
+		id: "exif",
+		name: "Local EXIF",
+		applies: ["image"],
+		mode: "live",
+		summary: "Camera, time, and GPS parsed in the browser. The file is not uploaded."
+	},
+	{
+		id: "pivot",
+		name: "Search pivots",
+		applies: "all",
+		mode: "pivot",
+		summary: "Hand-off links for sites that block automated checks. They are not live hits."
+	}
+];
+function techniquesFor(type) {
+	return TECHNIQUES.filter((t) => t.applies === "all" || t.applies.includes(type));
+}
+function outcome(record, technique) {
+	const m = record.modules;
+	switch (technique.id) {
+		case "classify": return record.type;
+		case "username": return m.username?.data ? `${m.username.data.found} confirmed of ${m.username.data.checked}` : m.username?.status ?? "not run";
+		case "social": {
+			const social = m.username?.data?.hits.filter((h) => h.status === "found" && (h.category === "Social" || h.category === "Creative")) ?? [];
+			if (social.length) return social.map((h) => h.name).join(", ");
+			return m.username?.data ? "none confirmed" : m.username?.status ?? "not run";
+		}
+		case "github": return m.github?.data?.found ? m.github.data.login ?? "found" : m.github?.data ? "no profile" : m.github?.status ?? "not run";
+		case "dns": return m.domain?.data ? `${m.domain.data.ips.length} addresses · ${m.domain.data.mx.length} MX` : m.domain?.status ?? "not run";
+		case "rdap": return m.domain?.data?.rdap?.registrar || m.ip?.data?.[0]?.rdap?.name || (m.domain?.status ?? m.ip?.status ?? "not run");
+		case "ct": return m.domain?.data ? `${m.domain.data.subdomains.length} hostnames · ${m.domain.data.certs.length} certs` : m.domain?.status ?? "not run";
+		case "mail": {
+			const auth = m.domain?.data?.emailAuth;
+			if (!auth) return m.domain?.status ?? "not run";
+			return [auth.spfAll ? `SPF ${auth.spfAll}` : "no SPF", auth.dmarcPolicy ? `DMARC ${auth.dmarcPolicy}` : "no DMARC"].join(" · ");
+		}
+		case "http": return m.url?.data?.http?.title || m.domain?.data?.http?.title || (m.url?.status ?? m.domain?.status ?? "not run");
+		case "geo": return m.ip?.data?.[0] ? [m.ip.data[0].city, m.ip.data[0].country].filter(Boolean).join(", ") || "no geo" : m.ip?.status ?? "not run";
+		case "phone": return m.phone?.data?.directory?.holder || m.phone?.data?.carrier || (m.phone?.status ?? "not run");
+		case "hash": return m.hash?.data?.known ? m.hash.data.fileName || "known file" : m.hash?.data ? "not in CIRCL" : m.hash?.status ?? "not run";
+		case "wallet": return m.wallet?.data?.balance || m.wallet?.data?.message || (m.wallet?.status ?? "not run");
+		case "exif": return m.image?.data?.gps ? "GPS present" : m.image?.data ? "no GPS" : "not run";
+		case "pivot": return "open from the Pivots tab";
+		default: return "";
+	}
+}
+function TechniqueReport({ record }) {
+	const rows = techniquesFor(record.type);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+		className: "flex flex-col gap-2",
+		children: rows.map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+			className: "rounded-lg border border-border bg-surface px-4 py-3",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex flex-wrap items-center gap-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "text-sm font-medium text-fg",
+						children: t.name
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+						variant: t.mode === "live" ? "ok" : "default",
+						children: t.mode === "live" ? "Live" : "Pivot"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-1 text-sm text-muted",
+					children: t.summary
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-2 font-mono text-xs text-accent",
+					children: outcome(record, t)
+				})
+			]
+		}, t.id))
+	});
+}
+function TechniqueSamples({ onRun }) {
+	const rows = TECHNIQUES.filter((t) => t.sample);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "mt-10 w-full text-left",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "mb-3 text-xs font-medium uppercase tracking-[0.16em] text-subtle",
+			children: "Techniques"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+			className: "flex flex-col gap-2",
+			children: rows.map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+				className: "flex items-start justify-between gap-3 rounded-lg border border-border px-3 py-3",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "min-w-0",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "text-sm text-fg",
+						children: t.name
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "mt-0.5 text-xs text-subtle",
+						children: t.summary
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					variant: "outline",
+					size: "sm",
+					className: "shrink-0",
+					"aria-label": `Try ${t.name}`,
+					onClick: () => onRun(t.sample),
+					children: "Try"
+				})]
+			}, t.id))
 		})]
 	});
 }
@@ -1082,20 +1584,81 @@ function pivotLinks(type, value) {
 		href: `https://viewdns.info/reverseip/?host=${q}&t=1`
 	});
 	if (type === "phone") {
+		const parsed = parseAnyPhone(q);
 		const digits = q.replace(/\D/g, "");
+		const e164 = parsed?.number ?? (q.startsWith("+") ? q : `+${digits}`);
+		const national = parsed?.formatNational() ?? digits;
+		const iso = (parsed?.country ?? "AU").toLowerCase();
+		const wa = e164.replace(/\D/g, "");
 		links.push({
+			group: "Search",
+			label: "Google quoted E.164",
+			href: g(`"${e164}"`)
+		}, {
+			group: "Search",
+			label: "Google national format",
+			href: g(`"${national}"`)
+		}, {
+			group: "Search",
+			label: "DuckDuckGo",
+			href: ddg(`"${e164}" OR "${national}"`)
+		}, {
+			group: "Search",
+			label: "Paste sites",
+			href: g(`"${e164}" OR "${national}" site:pastebin.com OR site:ghostbin.com`)
+		}, {
 			group: "People",
 			label: "Truecaller",
-			href: `https://www.truecaller.com/search/us/${digits}`
+			href: `https://www.truecaller.com/search/${iso}/${encodeURIComponent(national.replace(/\s+/g, ""))}`
 		}, {
-			group: "Search",
-			label: "Quoted number",
-			href: g(`"${q}"`)
+			group: "People",
+			label: "Should I Answer",
+			href: `https://www.shouldianswer.com/phone-number/${wa}`
 		}, {
-			group: "Search",
-			label: "Digits only",
-			href: g(`"${digits}"`)
+			group: "People",
+			label: "NumLookup",
+			href: `https://www.numlookup.com/phone-number/${encodeURIComponent(e164)}`
+		}, {
+			group: "People",
+			label: "Sync.me",
+			href: `https://sync.me/search/?number=${encodeURIComponent(e164)}`
+		}, {
+			group: "Messaging",
+			label: "WhatsApp",
+			href: `https://wa.me/${wa}`
+		}, {
+			group: "Code",
+			label: "GitHub code",
+			href: `https://github.com/search?q=${encodeURIComponent(e164)}&type=code`
 		});
+		if (iso === "au") {
+			const local = national.replace(/\D/g, "");
+			links.push({
+				group: "Australia",
+				label: "Reverse Australia",
+				href: `https://www.reverseaustralia.com/lookup/${local}/`
+			}, {
+				group: "Australia",
+				label: "White Pages",
+				href: "https://www.whitepages.com.au/"
+			}, {
+				group: "Australia",
+				label: "ACMA numbering",
+				href: "https://www.acma.gov.au/phone-numbers"
+			});
+		}
+		if (iso === "us" || iso === "ca") {
+			const n = wa.replace(/^1/, "");
+			links.push({
+				group: "NANP",
+				label: "800notes",
+				href: `https://800notes.com/Phone.aspx/${n.slice(0, 3)}-${n.slice(3, 6)}-${n.slice(6)}`
+			}, {
+				group: "NANP",
+				label: "Whitepages",
+				href: `https://www.whitepages.com/phone/${n}`
+			});
+		}
 	}
 	if (type === "hash") links.push({
 		group: "Malware",
@@ -1149,6 +1712,304 @@ function pivotLinks(type, value) {
 	});
 	return links;
 }
+var PLATFORMS = [
+	{
+		id: "github",
+		name: "GitHub",
+		category: "Code",
+		url: (u) => `https://github.com/${u}`,
+		live: true
+	},
+	{
+		id: "gitlab",
+		name: "GitLab",
+		category: "Code",
+		url: (u) => `https://gitlab.com/${u}`,
+		live: true
+	},
+	{
+		id: "dockerhub",
+		name: "Docker Hub",
+		category: "Code",
+		url: (u) => `https://hub.docker.com/u/${u}`,
+		live: true
+	},
+	{
+		id: "huggingface",
+		name: "Hugging Face",
+		category: "Code",
+		url: (u) => `https://huggingface.co/${u}`,
+		live: true
+	},
+	{
+		id: "crates",
+		name: "crates.io",
+		category: "Code",
+		url: (u) => `https://crates.io/users/${u}`,
+		live: true
+	},
+	{
+		id: "npm",
+		name: "npm",
+		category: "Code",
+		url: (u) => `https://www.npmjs.com/~${u}`,
+		live: true
+	},
+	{
+		id: "codeberg",
+		name: "Codeberg",
+		category: "Code",
+		url: (u) => `https://codeberg.org/${u}`,
+		live: true
+	},
+	{
+		id: "rubygems",
+		name: "RubyGems",
+		category: "Code",
+		url: (u) => `https://rubygems.org/profiles/${u}`,
+		live: true
+	},
+	{
+		id: "bitbucket",
+		name: "Bitbucket",
+		category: "Code",
+		url: (u) => `https://bitbucket.org/${u}`,
+		live: false
+	},
+	{
+		id: "replit",
+		name: "Replit",
+		category: "Code",
+		url: (u) => `https://replit.com/@${u}`,
+		live: false
+	},
+	{
+		id: "codepen",
+		name: "CodePen",
+		category: "Code",
+		url: (u) => `https://codepen.io/${u}`,
+		live: false
+	},
+	{
+		id: "kaggle",
+		name: "Kaggle",
+		category: "Code",
+		url: (u) => `https://www.kaggle.com/${u}`,
+		live: false
+	},
+	{
+		id: "reddit",
+		name: "Reddit",
+		category: "Social",
+		url: (u) => `https://www.reddit.com/user/${u}`,
+		live: false
+	},
+	{
+		id: "youtube",
+		name: "YouTube",
+		category: "Social",
+		url: (u) => `https://www.youtube.com/user/${u}`,
+		live: true
+	},
+	{
+		id: "twitch",
+		name: "Twitch",
+		category: "Social",
+		url: (u) => `https://www.twitch.tv/${u}`,
+		live: true
+	},
+	{
+		id: "bsky",
+		name: "Bluesky",
+		category: "Social",
+		url: (u) => `https://bsky.app/profile/${u}`,
+		live: true
+	},
+	{
+		id: "mastodon",
+		name: "Mastodon",
+		category: "Social",
+		url: (u) => `https://mastodon.social/@${u}`,
+		live: true
+	},
+	{
+		id: "tiktok",
+		name: "TikTok",
+		category: "Social",
+		url: (u) => `https://www.tiktok.com/@${u}`,
+		live: true
+	},
+	{
+		id: "tumblr",
+		name: "Tumblr",
+		category: "Social",
+		url: (u) => `https://${u}.tumblr.com`,
+		live: true
+	},
+	{
+		id: "vimeo",
+		name: "Vimeo",
+		category: "Social",
+		url: (u) => `https://vimeo.com/${u}`,
+		live: true
+	},
+	{
+		id: "mixcloud",
+		name: "Mixcloud",
+		category: "Social",
+		url: (u) => `https://www.mixcloud.com/${u}/`,
+		live: true
+	},
+	{
+		id: "x",
+		name: "X",
+		category: "Social",
+		url: (u) => `https://x.com/${u}`,
+		live: false
+	},
+	{
+		id: "instagram",
+		name: "Instagram",
+		category: "Social",
+		url: (u) => `https://www.instagram.com/${u}/`,
+		live: false
+	},
+	{
+		id: "tiktok",
+		name: "TikTok",
+		category: "Social",
+		url: (u) => `https://www.tiktok.com/@${u}`,
+		live: false
+	},
+	{
+		id: "linkedin",
+		name: "LinkedIn",
+		category: "Social",
+		url: (u) => `https://www.linkedin.com/in/${u}`,
+		live: false
+	},
+	{
+		id: "facebook",
+		name: "Facebook",
+		category: "Social",
+		url: (u) => `https://www.facebook.com/${u}`,
+		live: false
+	},
+	{
+		id: "threads",
+		name: "Threads",
+		category: "Social",
+		url: (u) => `https://www.threads.net/@${u}`,
+		live: false
+	},
+	{
+		id: "hn",
+		name: "Hacker News",
+		category: "Community",
+		url: (u) => `https://news.ycombinator.com/user?id=${u}`,
+		live: true
+	},
+	{
+		id: "devto",
+		name: "Dev.to",
+		category: "Community",
+		url: (u) => `https://dev.to/${u}`,
+		live: true
+	},
+	{
+		id: "keybase",
+		name: "Keybase",
+		category: "Community",
+		url: (u) => `https://keybase.io/${u}`,
+		live: true
+	},
+	{
+		id: "hashnode",
+		name: "Hashnode",
+		category: "Community",
+		url: (u) => `https://hashnode.com/@${u}`,
+		live: false
+	},
+	{
+		id: "producthunt",
+		name: "Product Hunt",
+		category: "Community",
+		url: (u) => `https://www.producthunt.com/@${u}`,
+		live: false
+	},
+	{
+		id: "stackoverflow",
+		name: "Stack Overflow",
+		category: "Community",
+		url: (u) => `https://stackoverflow.com/users/${u}`,
+		live: false
+	},
+	{
+		id: "soundcloud",
+		name: "SoundCloud",
+		category: "Creative",
+		url: (u) => `https://soundcloud.com/${u}`,
+		live: true
+	},
+	{
+		id: "dribbble",
+		name: "Dribbble",
+		category: "Creative",
+		url: (u) => `https://dribbble.com/${u}`,
+		live: false
+	},
+	{
+		id: "behance",
+		name: "Behance",
+		category: "Creative",
+		url: (u) => `https://www.behance.net/${u}`,
+		live: false
+	},
+	{
+		id: "wikipedia",
+		name: "Wikipedia",
+		category: "Other",
+		url: (u) => `https://en.wikipedia.org/wiki/User:${u}`,
+		live: true
+	},
+	{
+		id: "telegram",
+		name: "Telegram",
+		category: "Other",
+		url: (u) => `https://t.me/${u}`,
+		live: false
+	},
+	{
+		id: "patreon",
+		name: "Patreon",
+		category: "Other",
+		url: (u) => `https://www.patreon.com/${u}`,
+		live: false
+	},
+	{
+		id: "steam",
+		name: "Steam",
+		category: "Social",
+		url: (u) => `https://steamcommunity.com/id/${u}`,
+		live: true
+	},
+	{
+		id: "chess",
+		name: "Chess.com",
+		category: "Community",
+		url: (u) => `https://www.chess.com/member/${u}`,
+		live: true
+	},
+	{
+		id: "lichess",
+		name: "Lichess",
+		category: "Community",
+		url: (u) => `https://lichess.org/@/${u}`,
+		live: true
+	}
+];
+PLATFORMS.filter((p) => p.live);
+var PIVOT_PLATFORMS = PLATFORMS.filter((p) => !p.live);
 function StatusBadge({ status }) {
 	if (status === "loading") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
 		variant: "accent",
@@ -1215,42 +2076,102 @@ function Ext({ href, children }) {
 	});
 }
 function UsernameCard({ data }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-		className: "mb-3 font-mono text-xs text-muted",
+	const social = data.hits.filter((h) => h.status === "found" && (h.category === "Social" || h.category === "Creative"));
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
 		children: [
-			data.found,
-			" found · ",
-			data.checked,
-			" live-checked"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				className: "font-mono text-xs text-muted",
+				children: [
+					data.found,
+					" found · ",
+					data.checked,
+					" live-checked · ",
+					social.length,
+					" social"
+				]
+			}),
+			social.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+				className: "flex flex-col gap-2",
+				children: social.map((h) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+					className: "rounded-lg border border-border bg-elevated px-3 py-3",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "flex items-start gap-3",
+						children: [h.avatar ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							src: h.avatar,
+							alt: "",
+							width: 40,
+							height: 40,
+							className: "size-10 rounded-md border border-border object-cover"
+						}) : null, /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "min-w-0 flex-1",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "flex items-center justify-between gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+										className: "truncate text-sm text-fg",
+										children: [h.name, h.detail ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											className: "text-muted",
+											children: [" · ", h.detail]
+										}) : null]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
+										href: h.url,
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+											variant: "ok",
+											children: "Open"
+										})
+									})]
+								}),
+								h.followers != null ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									className: "text-xs text-subtle",
+									children: [h.followers.toLocaleString(), " followers"]
+								}) : null,
+								h.bio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "mt-1 text-sm text-muted",
+									children: h.bio
+								}) : null
+							]
+						})]
+					})
+				}, h.id))
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm text-muted",
+				children: "No confirmed YouTube, TikTok, Twitch, Bluesky, Mastodon, Tumblr, or Steam account."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs text-subtle",
+				children: "A hit means that username is registered. It does not prove the accounts belong to the same person. X, Instagram, Reddit, and Facebook are not checked."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+				className: "grid grid-cols-1 gap-1 sm:grid-cols-2",
+				children: data.hits.filter((h) => !(h.status === "found" && (h.category === "Social" || h.category === "Creative"))).map((h) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+					className: "flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-elevated",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "min-w-0",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "truncate text-sm text-fg",
+							children: h.name
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-xs text-subtle",
+							children: h.category
+						})]
+					}), h.status === "found" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
+						href: h.url,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+							variant: "ok",
+							children: "Found"
+						})
+					}) : h.status === "absent" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, { children: "Absent" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
+						href: h.url,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+							variant: "warn",
+							children: "Check"
+						})
+					})]
+				}, h.id))
+			})
 		]
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
-		className: "grid grid-cols-1 gap-1 sm:grid-cols-2",
-		children: data.hits.map((h) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-			className: "flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-elevated",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "min-w-0",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "truncate text-sm text-fg",
-					children: h.name
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "text-xs text-subtle",
-					children: h.category
-				})]
-			}), h.status === "found" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
-				href: h.url,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-					variant: "ok",
-					children: "Found"
-				})
-			}) : h.status === "absent" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, { children: "Absent" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
-				href: h.url,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-					variant: "warn",
-					children: "Check"
-				})
-			})]
-		}, h.id))
-	})] });
+	});
 }
 function GithubCard({ data }) {
 	if (!data.found) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -1348,6 +2269,11 @@ function EmailCard({ data }) {
 					value: data.disposable ? "Likely" : "Unlikely"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+					label: "MX",
+					value: data.mx?.join(" · ") || void 0,
+					mono: true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
 					label: "Gravatar",
 					value: data.gravatar.hasImage ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
 						href: data.gravatar.profileUrl,
@@ -1388,6 +2314,14 @@ function DomainCard({ data }) {
 					label: "MX",
 					value: data.mx.join(" · ") || void 0,
 					mono: true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+					label: "SPF",
+					value: data.emailAuth?.spfAll || (data.emailAuth?.spf ? "Present" : data.emailAuth ? "Absent" : void 0)
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+					label: "DMARC",
+					value: data.emailAuth?.dmarcPolicy ? `p=${data.emailAuth.dmarcPolicy}` : data.emailAuth ? "Absent" : void 0
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
 					label: "A / AAAA",
@@ -1538,41 +2472,191 @@ function UrlCard({ data }) {
 	] });
 }
 function PhoneCard({ data }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "Valid",
-			value: data.valid ? "Yes" : "No"
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "Possible",
-			value: data.possible ? "Yes" : "No"
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "E.164",
-			value: data.e164,
-			mono: true
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "International",
-			value: data.international
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "National",
-			value: data.national
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "Country",
-			value: data.country
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "Code",
-			value: data.countryCallingCode
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-			label: "Type",
-			value: data.type
-		})
-	] });
+	const pivots = pivotLinks("phone", data.e164 || data.raw);
+	const findings = phoneFindings(data);
+	const mentionCount = data.sightings?.length ?? 0;
+	const dirCount = data.reputation?.length ?? 0;
+	const directory = data.directory;
+	const mapQuery = directory?.address || (data.city ? `${data.city}, ${data.countryName ?? ""}` : void 0);
+	const mapHref = data.nanp?.lat != null && data.nanp.lon != null ? `https://www.google.com/maps?q=${data.nanp.lat},${data.nanp.lon}` : mapQuery ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}` : void 0;
+	const directoryRows = [
+		directory?.holder ? {
+			label: "Holder",
+			value: directory.holder
+		} : null,
+		directory?.area ? {
+			label: "Area",
+			value: directory.area
+		} : null,
+		directory?.phoneType ? {
+			label: "Line",
+			value: directory.phoneType
+		} : null,
+		directory?.lastFound ? {
+			label: "Last seen",
+			value: directory.lastFound
+		} : null,
+		directory?.complaintsTotal != null ? {
+			label: "Reports",
+			value: `${directory.complaintsYear ?? 0} this year · ${directory.complaintsTotal} total`
+		} : null,
+		directory?.names?.length ? {
+			label: "Names",
+			value: directory.names.join(" · ")
+		} : null,
+		directory?.address ? {
+			label: "Address",
+			value: directory.address
+		} : null
+	].filter((row) => Boolean(row));
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				className: "font-mono text-xs text-muted",
+				children: [
+					directoryRows.length,
+					" directory fields · ",
+					findings.length,
+					" numbering results · ",
+					mentionCount,
+					" public pages"
+				]
+			}),
+			directory && directoryRows.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "rounded-lg border border-border bg-elevated p-3",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "mb-2 flex items-center justify-between gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-xs uppercase tracking-[0.14em] text-subtle",
+							children: directory.source
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: directory.url,
+							target: "_blank",
+							rel: "noreferrer",
+							className: "text-sm text-accent hover:underline",
+							children: "Open listing"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dl", { children: directoryRows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+						label: row.label,
+						value: row.label === "Address" && mapHref ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
+							href: mapHref,
+							children: row.value
+						}) : row.value
+					}, row.label)) }),
+					directory.spamNote ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "mt-2 text-sm text-warn",
+						children: directory.spamNote
+					}) : null
+				]
+			}) : data.country === "AU" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm text-muted",
+				children: "No Reverse Australia listing published a holder, area, or name for this number."
+			}) : null,
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+				className: "grid grid-cols-1 gap-1 sm:grid-cols-2",
+				children: findings.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+					className: "rounded-md px-2 py-2",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-xs text-subtle",
+							children: row.label
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-sm text-fg",
+							children: row.id === "coords" && mapHref ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
+								href: mapHref,
+								children: row.value
+							}) : row.value
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-xs text-subtle",
+							children: row.source
+						})
+					]
+				}, row.id))
+			}),
+			data.nanp?.switchName ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+				label: "Switch",
+				value: data.nanp.switchName,
+				mono: true
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+				label: "NPA-NXX",
+				value: `${data.nanp.npa}-${data.nanp.nxx}`,
+				mono: true
+			})] }) : null,
+			dirCount > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				className: "mb-2 text-xs uppercase tracking-[0.14em] text-subtle",
+				children: ["Reverse directories · ", dirCount]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+				className: "grid grid-cols-1 gap-1 sm:grid-cols-2",
+				children: data.reputation?.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+					href: row.url,
+					target: "_blank",
+					rel: "noreferrer",
+					className: "flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-elevated",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "min-w-0",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "truncate text-sm text-fg",
+							children: row.source
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "truncate text-xs text-subtle",
+							children: row.summary
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+						variant: "ok",
+						children: "Open"
+					})]
+				}) }, row.url))
+			})] }) : null,
+			mentionCount > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				className: "mb-2 text-xs uppercase tracking-[0.14em] text-subtle",
+				children: ["Pages that quote this number · ", mentionCount]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+				className: "space-y-1",
+				children: data.sightings?.map((hit) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+					href: hit.url,
+					target: "_blank",
+					rel: "noreferrer",
+					className: "block rounded-md px-2 py-2 hover:bg-elevated",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "text-sm text-fg",
+						children: hit.title
+					}), hit.snippet ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "mt-0.5 text-xs text-subtle",
+						children: hit.snippet
+					}) : null]
+				}) }, hit.url))
+			})] }) : directory?.names?.length ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm text-muted",
+				children: "No extra web page quotes this exact number. Subscriber name only appears when a public directory already publishes it."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "mb-2 text-xs uppercase tracking-[0.14em] text-subtle",
+				children: "Open on"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "flex flex-wrap gap-2",
+				children: pivots.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+					href: p.href,
+					target: "_blank",
+					rel: "noreferrer",
+					className: "inline-flex h-11 items-center rounded-md border border-border bg-elevated px-3 text-sm text-fg hover:border-accent/40",
+					children: p.label
+				}, p.href))
+			})] }),
+			data.carrierNote ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs text-subtle",
+				children: data.carrierNote
+			}) : null,
+			data.notes?.map((n) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs text-subtle",
+				children: n
+			}, n))
+		]
+	});
 }
 function HashCard({ data }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
@@ -1585,21 +2669,83 @@ function HashCard({ data }) {
 			value: data.bits || void 0
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Known",
+			value: data.known === void 0 ? void 0 : data.known ? "Yes" : "No"
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "File",
+			value: data.fileName
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Size",
+			value: data.fileSize ? `${data.fileSize} bytes` : void 0
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Source",
+			value: data.source
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "MD5",
+			value: data.md5,
+			mono: true
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "SHA-1",
+			value: data.sha1,
+			mono: true
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
 			label: "Value",
 			value: data.value,
 			mono: true
-		})
+		}),
+		data.message ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "mt-2 text-sm text-muted",
+			children: data.message
+		}) : null
 	] });
 }
 function WalletCard({ data }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-		label: "Chain",
-		value: data.chain
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
-		label: "Address",
-		value: data.address,
-		mono: true
-	})] });
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Chain",
+			value: data.chain
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Address",
+			value: data.address,
+			mono: true
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Balance",
+			value: data.balance,
+			mono: true
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Received",
+			value: data.received,
+			mono: true
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Transactions",
+			value: data.txCount
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "ENS",
+			value: data.ens
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kv, {
+			label: "Explorer",
+			value: data.explorer ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ext, {
+				href: data.explorer,
+				children: "Open"
+			}) : void 0
+		}),
+		data.message ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "mt-2 text-sm text-muted",
+			children: data.message
+		}) : null
+	] });
 }
 function ImageCard({ data }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
@@ -1646,6 +2792,9 @@ function ImageCard({ data }) {
 }
 function Dossier({ record }) {
 	const [tab, setTab] = (0, import_react.useState)("overview");
+	(0, import_react.useEffect)(() => {
+		setTab("overview");
+	}, [record.id]);
 	const m = record.modules;
 	const pivots = pivotLinks(record.type, record.query);
 	const groups = [...new Set(pivots.map((p) => p.group))];
@@ -1691,18 +2840,22 @@ function Dossier({ record }) {
 								]
 							})
 						]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						variant: "outline",
-						size: "sm",
-						onClick: () => {
-							copyText(record.query).then(() => toast.success("Copied target"));
-						},
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, { className: "size-3.5" }), "Copy"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "flex shrink-0 items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							variant: "outline",
+							size: "sm",
+							onClick: () => {
+								copyText(record.query).then(() => toast.success("Copied target"));
+							},
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, { className: "size-3.5" }), "Copy"]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ExportMenu, { record })]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "flex gap-1 rounded-lg bg-elevated p-1",
 					children: [
 						["overview", "Overview"],
+						["methods", "Methods"],
 						["graph", "Graph"],
 						["pivots", "Pivots"]
 					].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
@@ -1713,6 +2866,7 @@ function Dossier({ record }) {
 					}, id))
 				})]
 			}),
+			tab === "methods" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TechniqueReport, { record }) : null,
 			tab === "graph" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EntityGraph, { record }) : null,
 			tab === "pivots" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "space-y-6",
@@ -1867,12 +3021,12 @@ var SAMPLES = [
 		hint: "domain"
 	},
 	{
-		label: "1.1.1.1",
-		hint: "IP"
+		label: "+61 412 345 678",
+		hint: "AU mobile"
 	},
 	{
-		label: "https://github.com",
-		hint: "URL"
+		label: "+1 650-253-0000",
+		hint: "US phone"
 	}
 ];
 function EmptyDesk() {
@@ -1905,6 +3059,7 @@ function EmptyDesk() {
 					})]
 				}, s.label))
 			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TechniqueSamples, { onRun: (sample) => void runInvestigation(sample) }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 				className: "mt-10 max-w-sm text-xs leading-relaxed text-subtle",
 				children: "Queries public registries and profile URLs only. No port scans, no credential stuffing, no paid breach dumps. Cases stay in this browser. Drop a photo to read EXIF locally."
@@ -1925,24 +3080,6 @@ function Textarea({ className, ...props }) {
 }
 function NotesPanel({ record }) {
 	const setNotes = useCaseStore((s) => s.setNotes);
-	function exportMd() {
-		const blob = new Blob([toMarkdown(record)], { type: "text/markdown" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = `${record.id}.md`;
-		a.click();
-		URL.revokeObjectURL(url);
-	}
-	function exportJson() {
-		const blob = new Blob([JSON.stringify(record, null, 2)], { type: "application/json" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = `${record.id}.json`;
-		a.click();
-		URL.revokeObjectURL(url);
-	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "flex h-full flex-col gap-4",
 		children: [
@@ -1967,29 +3104,7 @@ function NotesPanel({ record }) {
 					},
 					disabled: record.briefStatus === "loading",
 					children: [record.briefStatus === "loading" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, { className: "size-4 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScanText, { className: "size-4" }), "Analyst brief"]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "grid grid-cols-3 gap-2",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							variant: "outline",
-							size: "sm",
-							onClick: exportMd,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileText, { className: "size-3.5" }), "MD"]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							variant: "outline",
-							size: "sm",
-							onClick: exportJson,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "size-3.5" }), "JSON"]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							variant: "outline",
-							size: "sm",
-							onClick: () => window.print(),
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Printer, { className: "size-3.5" }), "Print"]
-						})
-					]
-				})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ExportMenu, { record })]
 			}),
 			record.brief ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 				className: "rounded-lg border border-border bg-elevated p-3",
@@ -2069,12 +3184,11 @@ function Desk({ initialQuery }) {
 	const [notesOpen, setNotesOpen] = (0, import_react.useState)(false);
 	const ranQuery = (0, import_react.useRef)(false);
 	(0, import_react.useEffect)(() => {
-		if (hydrated) return;
-		const t = window.setTimeout(() => {
-			if (!useCaseStore.getState().hasHydrated) useCaseStore.getState().setHasHydrated(true);
-		}, 80);
-		return () => window.clearTimeout(t);
-	}, [hydrated]);
+		const result = useCaseStore.persist.rehydrate();
+		Promise.resolve(result).finally(() => {
+			useCaseStore.getState().setHasHydrated(true);
+		});
+	}, []);
 	(0, import_react.useEffect)(() => {
 		if (!initialQuery || !hydrated || ranQuery.current) return;
 		ranQuery.current = true;
@@ -2147,10 +3261,7 @@ function Desk({ initialQuery }) {
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
 						className: "min-w-0 flex-1 overflow-y-auto scrollbar-thin",
-						children: !hydrated ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "px-6 py-16 text-sm text-muted",
-							children: "Restoring cases…"
-						}) : active ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dossier, { record: active }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyDesk, {})
+						children: active ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dossier, { record: active }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyDesk, {})
 					}),
 					active ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("aside", {
 						className: "no-print hidden w-80 shrink-0 border-l border-border p-4 xl:block",

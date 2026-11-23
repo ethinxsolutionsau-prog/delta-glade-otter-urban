@@ -1,34 +1,14 @@
-import { Download, FileText, Loader2, Printer, ScanText } from "lucide-react";
+import { Loader2, ScanText } from "lucide-react";
 import { toast } from "sonner";
+import { ExportMenu } from "@/components/export-menu";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useCaseStore } from "@/lib/cases/store";
 import { runBrief } from "@/lib/osint/run";
-import { toMarkdown } from "@/lib/osint/report";
 import type { CaseRecord } from "@/lib/osint/types";
 
 export function NotesPanel({ record }: { record: CaseRecord }) {
   const setNotes = useCaseStore((s) => s.setNotes);
-
-  function exportMd() {
-    const blob = new Blob([toMarkdown(record)], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${record.id}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function exportJson() {
-    const blob = new Blob([JSON.stringify(record, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${record.id}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
 
   return (
     <div className="flex h-full flex-col gap-4">
@@ -59,20 +39,7 @@ export function NotesPanel({ record }: { record: CaseRecord }) {
           )}
           Analyst brief
         </Button>
-        <div className="grid grid-cols-3 gap-2">
-          <Button variant="outline" size="sm" onClick={exportMd}>
-            <FileText className="size-3.5" />
-            MD
-          </Button>
-          <Button variant="outline" size="sm" onClick={exportJson}>
-            <Download className="size-3.5" />
-            JSON
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => window.print()}>
-            <Printer className="size-3.5" />
-            Print
-          </Button>
-        </div>
+        <ExportMenu record={record} />
       </div>
       {record.brief ? (
         <article className="rounded-lg border border-border bg-elevated p-3">
